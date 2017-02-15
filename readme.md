@@ -1,6 +1,7 @@
 ## Develop
 Install [yarn](https://yarnpkg.com/en/) or just npm. [yarn npm comparison](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)
 ```bash
+mkdir public #needs to exist
 yarn 
 yarn start #dev server
 ```
