@@ -1,5 +1,5 @@
 ## Develop
-Install yarn or npm
+Install [yarn](https://yarnpkg.com/en/) or just npm. [yarn npm comparison](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)
 ```bash
 yarn 
 yarn start #dev server
