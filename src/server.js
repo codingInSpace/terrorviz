@@ -9,13 +9,19 @@ import WebpackDevServer from 'webpack-dev-server';
 import apiRoutes from './api/routes';
 
 const app = express()
+
+// Sane headers
 app.use(helmet())
 app.use(cors())
 
+// Allow post data
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+
+// Static files to serve
 app.use(express.static('public'))
 
+// Serve index on primary route
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '../public/index.html')
 })
@@ -27,7 +33,7 @@ const port = process.env.PORT || 8080;
 const devPort = process.env.DEV_PORT || 1337;
 const developing = process.env.NODE_ENV !== 'production';
 
-// Dev server with proxy
+// Reloading dev server with proxy
 if (developing) {
   console.log(chalk.yellow('dev server'))
   const config = require("../webpack.config.dev.js");
@@ -51,6 +57,7 @@ if (developing) {
   });
 }
 
+// Init server
 const server = new Server(app);
 server.listen(port, err => {
   if (err) return console.error(err);
