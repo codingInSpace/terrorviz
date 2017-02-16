@@ -1,14 +1,27 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import { Server } from 'http';
 import chalk from 'chalk';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
+import apiRoutes from './api/routes';
 
 const app = express()
 app.use(helmet())
 app.use(cors())
+
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+app.use(express.static('public'))
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '../public/index.html')
+})
+
+// Mount api routes
+app.use('/api', apiRoutes)
 
 const port = process.env.PORT || 8080;
 const devPort = process.env.DEV_PORT || 1337;
