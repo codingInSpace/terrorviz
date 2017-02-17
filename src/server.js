@@ -4,13 +4,23 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { Server } from 'http';
 import chalk from 'chalk';
+import Promise from 'bluebird';
+import path from 'path';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
+
+import mongoose from 'mongoose'
+mongoose.Promise = Promise; // Apply bluebird promises to mongoose
+mongoose.connect('mongodb://localhost/terror')
+mongoose.connection.on('error', () => {
+  throw new Error(`unable to connect to database`);
+})
+
 import apiRoutes from './api/routes';
 
 const app = express()
 
-// Sane headers
+// Various secure HTTP headers, cross origin resource sharing
 app.use(helmet())
 app.use(cors())
 
@@ -19,15 +29,17 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // Static files to serve
-app.use(express.static('public'))
-
-// Serve index on primary route
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '../public/index.html')
-})
+//app.use(express.static('public'))
 
 // Mount api routes
 app.use('/api', apiRoutes)
+
+// Serve index on other routes
+app.get('*', (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.sendFile(path.resolve(__dirname, '..', 'index.html'))
+})
 
 const port = process.env.PORT || 8080;
 const devPort = process.env.DEV_PORT || 1337;
@@ -44,7 +56,7 @@ if (developing) {
     inline: true,
     proxy: {
       '/api/*' : {
-        target: `http://localhost:${port}/`,
+        target: `http://localhost:${port}/api/`,
       }
     },
     headers: { "Access-Control-Allow-Origin": "*" }

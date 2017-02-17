@@ -1,19 +1,23 @@
-import mongoose from 'mongoose'
+import Incident from '../models/incident'
 
-/**
- * Get all incidents in db
- */
-function getAll(req, res) {
-  mongoose.model('Incident').find({}, (err, incidents) => {
-    if (err) return console.error(err)
+// List items
+function list(req, res) {
+  Incident.list(100)
+    .then(incidents => res.json(incidents))
+    .catch(e => console.error(e));
+}
 
-    console.log('incidents length')
-    console.log(incidents.length)
-
-    res.json(incidents)
-  })
+// Test
+function test(req, res) {
+  Incident.testGetOne()
+    .then(incident => {
+      console.log(incident)
+      res.json(incident)
+    })
+    .catch(e => console.error(e));
 }
 
 export default {
-  getAll,
+  list,
+  test
 }
