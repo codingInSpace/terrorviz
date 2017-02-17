@@ -9,8 +9,13 @@ import path from 'path';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 
+// Init dotenv server side
+require('dotenv').config();
+
 import mongoose from 'mongoose'
 mongoose.Promise = Promise; // Apply bluebird promises to mongoose
+
+console.log(process.env.DB)
 mongoose.connect(process.env.DB)
 mongoose.connection.on('error', () => {
   throw new Error(`unable to connect to database`);

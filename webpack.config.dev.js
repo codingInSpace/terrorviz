@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const Dotenv = require('dotenv-webpack');
+const dotenv = require('dotenv-webpack');
 
 const ROOT_PATH = path.resolve(__dirname);
 
@@ -21,9 +21,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new Dotenv({
-      path: './.env',
-      safe: false
+    new dotenv({
+      path: './.env'
     }),
 		new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
@@ -40,6 +39,16 @@ module.exports = {
         exclude: /node_modules/,
 				loader: 'style-loader!css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]-[local]___[hash:base64:5]!sass-loader?sourceMap'
 			},
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      }
 		]
+  },
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
   }
 };
