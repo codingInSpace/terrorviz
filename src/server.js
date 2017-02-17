@@ -11,7 +11,7 @@ import WebpackDevServer from 'webpack-dev-server';
 
 import mongoose from 'mongoose'
 mongoose.Promise = Promise; // Apply bluebird promises to mongoose
-mongoose.connect('mongodb://localhost/terror')
+mongoose.connect(process.env.DB)
 mongoose.connection.on('error', () => {
   throw new Error(`unable to connect to database`);
 })

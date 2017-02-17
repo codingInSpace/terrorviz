@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 const ROOT_PATH = path.resolve(__dirname);
 
@@ -17,6 +18,10 @@ module.exports = {
 	plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new Dotenv({
+      path: './.env',
+      safe: false
     }),
     new webpack.optimize.UglifyJsPlugin()
 	],
