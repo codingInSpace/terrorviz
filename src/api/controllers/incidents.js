@@ -11,13 +11,23 @@ function list(req, res) {
 function test(req, res) {
   Incident.testGetOne()
     .then(incident => {
-      console.log(incident)
       res.json(incident)
     })
+    .catch(e => console.error(e));
+
+
+}
+
+// Get year
+function getYear(req, res) {
+  const year = parseFloat(req.params.y);
+  Incident.getYear(year)
+    .then(incidents => res.json(incidents))
     .catch(e => console.error(e));
 }
 
 export default {
   list,
-  test
+  test,
+  getYear
 }

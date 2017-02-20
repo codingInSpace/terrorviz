@@ -147,18 +147,29 @@ IncidentSchema.statics = {
    */
   testGetOne() {
     return this.find({
-//      _id: '58a60355dbb4dcc9db9d0cd9',
       qeventid: 201512310037
-    }).exec();
+    })
+    .exec();
   },
 
   /**
    * List all items
-   * @param {number} limit - Limit amount of documents
+   * @param {number} limit - Limit amount of documents. Default 10000
    * @returns {Promise|*|Array|{index: number, input: string}}
    */
   list(limit = 10000) {
     return this.find().limit(limit).exec();
+  },
+
+  /**
+   * Get all incidents that occurred in the given year
+   * @param {number} year - The year for the incidents. Default 2015
+   */
+  getYear(year = 2015) {
+    return this.find({
+      iyear: year
+    })
+    .exec();
   }
 }
 
