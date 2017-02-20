@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import MongoClient from 'mongodb'
 
 let instance = null
@@ -10,15 +11,18 @@ class dbContainer {
     if (!instance)
       instance = this;
 
-    MongoClient.connect(process.env.DB, (err, db) => {
-      if (err) throw new Error(err)
-      console.log(`connected to ${process.env.DB}`)
-
-      this.db = db
-      this.incidents = db.collection('incidents')
-    })
+    MongoClient.connect(process.env.DB, {
+        promiseLibrary: Promise
+      })
+      .then(db => {
+        console.log(`connected to ${process.env.DB}`)
+        this.db = db
+        this.incidents = db.collection('incidents')
+      })
+      .catch(reason => {
+        console.error(reason)
+      })
   }
-
 }
 
 export default dbContainer
