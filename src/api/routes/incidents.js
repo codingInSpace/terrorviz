@@ -6,11 +6,11 @@ const router = express.Router()
 router.route('/')
   .get(incidentCtrl.list)
 
-// api/incidents -- list all with limit param
+// api/incidents/xxx -- list all with limit param
 router.route('/:limit')
   .get(incidentCtrl.list)
 
-// api/incidents/year/xxxx -- list all for given year param
+// api/incidents/year/xxx -- list all for given year param
 router.route('/year/:y')
   .get(incidentCtrl.getYear)
 
