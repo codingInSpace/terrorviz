@@ -1,29 +1,32 @@
-import Incident from '../models/incident'
+import dbContainer from '../db'
+const db = new dbContainer()
 
 // List items
 function list(req, res) {
-  Incident.list(100)
-    .then(incidents => res.json(incidents))
-    .catch(e => console.error(e));
+  const limit = parseFloat(req.params.limit) || 10000
+  db.incidents.find().limit(limit).toArray((err, data) => {
+    if (err) console.error(err)
+    res.json(data)
+  })
 }
 
 // Test
 function test(req, res) {
-  Incident.testGetOne()
-    .then(incident => {
-      res.json(incident)
-    })
-    .catch(e => console.error(e));
-
-
+  db.incidents.find({
+    'qeventid': 201512310037
+  })
+  .toArray((err, data) => {
+    if (err) console.error(err)
+    res.json(data)
+  })
 }
 
-// Get year
 function getYear(req, res) {
-  const year = parseFloat(req.params.y);
-  Incident.getYear(year)
-    .then(incidents => res.json(incidents))
-    .catch(e => console.error(e));
+  const year = parseFloat(req.params.y)
+  db.incidents.find({'iyear': year}).toArray((err, data) => {
+    if (err) console.error(err)
+    res.json(data)
+  })
 }
 
 export default {

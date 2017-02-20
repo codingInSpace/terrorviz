@@ -1,25 +1,14 @@
-import express from 'express';
-import helmet from 'helmet';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import { Server } from 'http';
-import chalk from 'chalk';
-import Promise from 'bluebird';
-import path from 'path';
-import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
-
-// Init dotenv server side
-require('dotenv').config();
-
-import mongoose from 'mongoose'
-mongoose.Promise = Promise; // Apply bluebird promises to mongoose
-
-console.log(process.env.DB)
-mongoose.connect(process.env.DB)
-mongoose.connection.on('error', () => {
-  throw new Error(`unable to connect to database`);
-})
+import 'dotenv/config'
+import express from 'express'
+import helmet from 'helmet'
+import cors from 'cors'
+import bodyParser from 'body-parser'
+import { Server } from 'http'
+import chalk from 'chalk'
+//import Promise from 'bluebird'
+import path from 'path'
+import webpack from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
 
 import apiRoutes from './api/routes';
 
