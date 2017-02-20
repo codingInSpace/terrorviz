@@ -166,10 +166,10 @@ IncidentSchema.statics = {
    * @param {number} year - The year for the incidents. Default 2015
    */
   getYear(year = 2015) {
-    return this.find({
-      iyear: year
-    })
-    .exec();
+    return this.find()
+      .where('iyear').equals(year)
+      .lean()
+      .exec();
   }
 }
 
