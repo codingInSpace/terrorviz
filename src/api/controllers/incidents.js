@@ -3,7 +3,7 @@ const db = new dbContainer()
 
 // List items
 function list(req, res) {
-  const limit = parseFloat(req.params.limit) || 10000
+  const limit = parseFloat(req.params.limit) || 1000000
   db.incidents.find().limit(limit).toArray()
     .then(results => {
       res.json(results)
