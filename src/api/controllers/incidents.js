@@ -28,6 +28,7 @@ function test(req, res) {
 }
 
 function getYear(req, res) {
+	console.log('get year')
   const year = parseFloat(req.params.y)
   db.incidents.find({'iyear': year})
     .toArray()

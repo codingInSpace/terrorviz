@@ -11,6 +11,8 @@ class dbContainer {
     if (!instance)
       instance = this;
 
+	console.log(process.env.DB);
+
     MongoClient.connect(process.env.DB, {
         promiseLibrary: Promise
       })
