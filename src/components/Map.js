@@ -38,8 +38,9 @@ class Map {
   }
 
   zoomed() {
+    const { x, y, k } = event.transform  // event.transform.x, event.transform.y etc
     select('body').select('svg').select('g')
-      .attr('transform', `translate(${event.transform.x}, ${event.transform.y}) scale(${event.transform.k})`)
+      .attr('transform', `translate(${x}, ${y}) scale(${k})`)
   }
 
   draw(data) {
