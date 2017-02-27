@@ -3,33 +3,22 @@ import {
   geoMercator,
   select,
   geoPath,
+  zoom,
   json,
-  selectAll,
   event
 } from 'd3'
 
 /**
- * Main max class
+ * Main map class
  */
 class Map {
 
-  constructor() {
-    this.init()
-  }
-
-  //reset() {
-  //  this.init()
-  //}
-
-  init() {
-    const width = 1600
-    const height = 800
-
+  constructor(width = 1600, height = 800) {
     this.projection = geoMercator()
       .scale((width - 3) / (2 * Math.PI))
       .translate([width / 2, height / 1.75]);
 
-    const svg = select("body").append("svg")
+    this.svg = select("body").append("svg")
       .attr("width", width)
       .attr("height", height);
     //.style("background-color", "black");
@@ -37,11 +26,20 @@ class Map {
     this.path = geoPath()
       .projection(this.projection);
 
-    this.g = svg.append("g");
+    this.g = this.svg.append("g");
 
     this.tooltip = select("body").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
+
+    this.zoomBehavior = zoom()
+        .scaleExtent([1, 100])
+      .on('zoom', this.zoomed)
+  }
+
+  zoomed() {
+    select('body').select('svg').select('g')
+      .attr('transform', `translate(${event.transform.x}, ${event.transform.y}) scale(${event.transform.k})`)
   }
 
   draw(data) {
@@ -88,22 +86,7 @@ class Map {
         })
         .on("click", d => console.log(d['country_txt']));
 
-      /*
-       // zoom and pan
-       var zoom = d3.behavior.zoom()
-       .on("zoom",function() {
-       g.attr("transform","translate("+
-       d3.event.translate.join(",")+")scale("+d3.event.scale+")");
-       g.selectAll("circle")
-       .attr("d", path.projection(projection));
-       g.selectAll("path")
-       .attr("d", path.projection(projection));
-
-       });
-
-       svg.call(zoom)
-       */
-
+      this.svg.call(this.zoomBehavior)
       console.log('map drawn')
     })
   }

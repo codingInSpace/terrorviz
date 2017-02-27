@@ -17,7 +17,8 @@ class dbContainer {
         promiseLibrary: Promise
       })
       .then(db => {
-        console.log(`connected to ${process.env.DB}`)
+        //console.log(`Connected to ${process.env.DB}`)
+        console.log('Connected to the database.')
         this.db = db
         this.incidents = db.collection('incidents')
       })
