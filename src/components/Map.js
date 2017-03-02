@@ -35,6 +35,8 @@ class Map {
     this.zoomBehavior = zoom()
         .scaleExtent([1, 100])
       .on('zoom', this.zoomed)
+
+    this.renderMap()
   }
 
   zoomed() {
@@ -43,7 +45,7 @@ class Map {
       .attr('transform', `translate(${x}, ${y}) scale(${k})`)
   }
 
-  draw(data) {
+  renderMap() {
     json('public/data/world-110m2.json', (error, topology) => {
       if (error) return console.error(error)
 
@@ -52,44 +54,46 @@ class Map {
         .enter()
         .append("path")
         .attr("d", this.path);
-
-      this.g.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("a")
-        .append("circle")
-        .attr("cx", d => this.projection([ d['longitude'], d['latitude'] ])[0])
-        .attr("cy", d => this.projection([ d['longitude'], d['latitude'] ])[1])
-        .attr("r", 2)
-        .style("fill", "aqua")
-        .style("opacity", 0.25)
-        .on("mouseover", d => {
-          this.tooltip.transition()
-            .duration(300)
-            .style("opacity", 1)
-            .style("background", "black")
-            .style("color", "white")
-            .style("letter-spacing", "1px")
-            .style("text-shadow", "none");
-
-          this.tooltip.html(`
-              ${d['country_txt']}, ${d['city']} <br> 
-              ${d['attacktype1_txt']} <br>
-              ${d['iyear']}
-            `)
-            .style("left", `${event.pageX + 10}px`)
-            .style("top", `${event.pageY - 28}px`);
-        })
-        .on("mouseout", () => {
-          this.tooltip.transition()
-            .duration(300)
-            .style("opacity", 0);
-        })
-        .on("click", d => console.log(d['country_txt']));
-
-      this.svg.call(this.zoomBehavior)
-      console.log('map drawn')
     })
+  }
+
+  draw(data) {
+    this.g.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("a")
+      .append("circle")
+      .attr("cx", d => this.projection([ d['longitude'], d['latitude'] ])[0])
+      .attr("cy", d => this.projection([ d['longitude'], d['latitude'] ])[1])
+      .attr("r", 2)
+      .style("fill", "aqua")
+      .style("opacity", 0.25)
+      .on("mouseover", d => {
+        this.tooltip.transition()
+          .duration(300)
+          .style("opacity", 1)
+          .style("background", "black")
+          .style("color", "white")
+          .style("letter-spacing", "1px")
+          .style("text-shadow", "none");
+
+        this.tooltip.html(`
+            ${d['country_txt']}, ${d['city']} <br> 
+            ${d['attacktype1_txt']} <br>
+            ${d['iyear']}
+          `)
+          .style("left", `${event.pageX + 10}px`)
+          .style("top", `${event.pageY - 28}px`);
+      })
+      .on("mouseout", () => {
+        this.tooltip.transition()
+          .duration(300)
+          .style("opacity", 0);
+      })
+      .on("click", d => console.log(d['country_txt']));
+
+    this.svg.call(this.zoomBehavior)
+    console.log('map drawn')
   }
 }
 
