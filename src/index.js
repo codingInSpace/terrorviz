@@ -1,8 +1,12 @@
 import axios from 'axios'
 import Map from './components/Map'
+import YearRange from './components/YearRange'
 
-const map = new Map();
+const map = new Map()
+const yearRange = new YearRange()
+
 const loader = document.querySelector('#map-loading-spinner')
+loader.style.display = 'block'
 const snackbarContainer = document.querySelector('#simple-toast');
 
 // Sample request
@@ -18,4 +22,3 @@ axios.get(`${process.env.API_HOST}/incidents/year/2015`)
     const data = {message: `Couldn't fetch data`};
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
   });
-

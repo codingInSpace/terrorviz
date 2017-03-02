@@ -36,6 +36,7 @@ p1 {
 }
 
 #map-loading-spinner {
+	display: none; /*hidden by default*/
 	z-index: 99;
 	position: absolute;
 	left: 48vw;
