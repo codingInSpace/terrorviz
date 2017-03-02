@@ -92,7 +92,6 @@ class Map {
       .on("click", d => console.log(d['country_txt']));
 
     this.svg.call(this.zoomBehavior)
-    console.log('map drawn')
   }
 }
 

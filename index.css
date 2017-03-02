@@ -35,7 +35,7 @@ p1 {
 	font-size: 14px;
 }
 
-#map-loading {
+#map-loading-spinner {
 	z-index: 99;
 	position: absolute;
 	left: 48vw;

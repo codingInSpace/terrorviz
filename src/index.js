@@ -2,7 +2,8 @@ import axios from 'axios'
 import Map from './components/Map'
 
 const map = new Map();
-const loader = document.getElementById('map-loading')
+const loader = document.querySelector('#map-loading-spinner')
+const snackbarContainer = document.querySelector('#simple-toast');
 
 // Sample request
 axios.get(`${process.env.API_HOST}/incidents/year/2015`)
@@ -12,5 +13,9 @@ axios.get(`${process.env.API_HOST}/incidents/year/2015`)
     map.draw(data)
     loader.style.display = 'none'
   })
-  .catch(error => console.error(error));
+  .catch(error => {
+    console.error(error)
+    const data = {message: `Couldn't fetch data`};
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+  });
 
