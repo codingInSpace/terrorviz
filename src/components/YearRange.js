@@ -25,10 +25,10 @@ class YearRange {
     this.g = this.svg.append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    this.x = scaleLinear().range([0, width])
+    this.x = scaleTime()
+      .domain([new Date(1970, 1, 1), new Date(2015, 1, 1)])
+      .rangeRound([0, width])
     this.y = randomNormal(height / 2, height / 8)
-
-    this.x.domain(extent([1970, 2015]))
 
     const brush = brushX()
       .extent([[0, 0], [width, height]])
