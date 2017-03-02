@@ -12,7 +12,6 @@ import {
  * Main map class
  */
 class Map {
-
   constructor(width = 1600, height = 800) {
     this.projection = geoMercator()
       .scale((width - 3) / (2 * Math.PI))
