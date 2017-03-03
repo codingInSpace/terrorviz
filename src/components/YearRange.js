@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {
   brush,
   select,
@@ -46,8 +47,8 @@ class YearRange {
         .tickSize(-height)
         .tickPadding(0))
       .selectAll("text")
-      .attr("x", 10)
-      .attr("y", 4);
+        .attr("x", 10)
+        .attr("y", 4);
 
     this.gBrush = this.g.append("g")
       .attr("class", "brush")
@@ -68,12 +69,10 @@ class YearRange {
 
   brushMoved(height) {
     const s = event.selection;
-    console.log(s)
     if (s === null) {
       this.handle.attr("display", "none"); //Hide handles if no range
       //circle.classed("active", false);
     } else {
-      console.log('hej')
       //const sx = s.map(this.x.invert);
       //circle.classed("active", function(d) { return sx[0] <= d && d <= sx[1]; });
 
@@ -94,6 +93,9 @@ class YearRange {
       t1[0] = timeYear.floor(t0[0]);
       t1[1] = timeYear.offset(t1[0]);
     }
+
+    const year1 = moment(t1[0]).format('YYYY')
+    const year2 = moment(t1[1]).subtract(1, 'y').format('YYYY')
 
     select('.brush').transition().call(event.target.move, t1.map(this.x));
   }
