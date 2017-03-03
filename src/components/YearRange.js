@@ -39,11 +39,15 @@ class YearRange {
       .on("end", () => this.brushEnded(this));
 
     this.g.append("g")
-      .attr("class", "axis axis--x")
+      .attr("class", "axis axis--grid")
       .attr("transform", `translate(0, ${height})`)
       .call(axisBottom(this.x)
         .ticks(timeYear)
-        .tickPadding(0));
+        .tickSize(-height)
+        .tickPadding(0))
+      .selectAll("text")
+      .attr("x", 10)
+      .attr("y", 4);
 
     this.gBrush = this.g.append("g")
       .attr("class", "brush")
@@ -58,11 +62,6 @@ class YearRange {
       .attr("stroke", "#000")
       .attr("stroke-width", 1.5)
       .attr("cursor", "ew-resize")
-      .attr("d", arc()
-        .innerRadius(0)
-        .outerRadius(height / 2)
-        .startAngle(0)
-        .endAngle((d, i) => i ? Math.PI : -Math.PI ));
 
     this.gBrush.call(this.brush.move, [0.3, 0.5].map(this.x));
   }
@@ -74,6 +73,7 @@ class YearRange {
       this.handle.attr("display", "none"); //Hide handles if no range
       //circle.classed("active", false);
     } else {
+      console.log('hej')
       //const sx = s.map(this.x.invert);
       //circle.classed("active", function(d) { return sx[0] <= d && d <= sx[1]; });
 
