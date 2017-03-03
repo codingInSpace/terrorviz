@@ -3,11 +3,13 @@ import {
   select,
   scaleLinear,
   scaleTime,
+  timeYear,
   extent,
   randomNormal,
   brushX,
   axisBottom,
   arc,
+  transition,
   event,
   selectAll
 } from 'd3'
@@ -19,29 +21,33 @@ class YearRange {
       .attr('height', svgHeight)
 
     const margin = {top: 20, right: 50, bottom: 20, left: 50}
-    const width = +this.svg.attr("width") - margin.left - margin.right
-    const height = +this.svg.attr("height") - margin.top - margin.bottom
+    const { left, right, top, bottom } = margin
+    const width = +this.svg.attr("width") - left - right
+    const height = +this.svg.attr("height") - top - bottom
 
     this.g = this.svg.append("g")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+      .attr("transform", `translate(${left}, ${top})`);
 
     this.x = scaleTime()
       .domain([new Date(1970, 1, 1), new Date(2015, 1, 1)])
       .rangeRound([0, width])
     this.y = randomNormal(height / 2, height / 8)
 
-    const brush = brushX()
+    this.brush = brushX()
       .extent([[0, 0], [width, height]])
-      .on("start brush end", () => this.brushMoved(height));
+      .on("start brush", () => this.brushMoved(height))
+      .on("end", () => this.brushEnded(this));
 
     this.g.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", `translate(0, ${height})`)
-      .call(axisBottom(this.x));
+      .call(axisBottom(this.x)
+        .ticks(timeYear)
+        .tickPadding(0));
 
     this.gBrush = this.g.append("g")
       .attr("class", "brush")
-      .call(brush);
+      .call(this.brush);
 
     this.handle = this.gBrush.selectAll(".handle--custom")
       .data([{type: "w"}, {type: "e"}])
@@ -58,10 +64,10 @@ class YearRange {
         .startAngle(0)
         .endAngle((d, i) => i ? Math.PI : -Math.PI ));
 
-    this.gBrush.call(brush.move, [0.3, 0.5].map(this.x));
+    this.gBrush.call(this.brush.move, [0.3, 0.5].map(this.x));
   }
 
-  brushMoved(height, brush) {
+  brushMoved(height) {
     const s = event.selection;
     console.log(s)
     if (s === null) {
@@ -74,6 +80,22 @@ class YearRange {
       this.handle.attr("display", null)
         .attr("transform", (d, i) => `translate(${s[i]}, ${height / 2})` );
     }
+  }
+
+  brushEnded(context) {
+    if (!event.sourceEvent) return;
+    if (!event.selection) return;
+
+    const t0 = event.selection.map(this.x.invert),
+      t1 = t0.map(timeYear.round);
+
+    // If empty when rounded, use floor & ceil instead.
+    if (t1[0] >= t1[1]) {
+      t1[0] = timeYear.floor(t0[0]);
+      t1[1] = timeYear.offset(t1[0]);
+    }
+
+    select('.brush').transition().call(event.target.move, t1.map(this.x));
   }
 }
 
