@@ -29,7 +29,14 @@ const yearRange = new YearRange()
 const initialYearRange = [1995]
 store.dispatch({type: actions.GET_INCIDENTS, payload: initialYearRange})
 
+let currentIncidentCount
+
 store.subscribe(() => {
+  let previousIncidentCount = currentIncidentCount
+  currentIncidentCount = store.getState().incidents.length
+
   console.log(store.getState())
-  map.draw(store.getState().incidents)
+
+  if (previousIncidentCount !== currentIncidentCount)
+    map.draw(store.getState().incidents)
 })

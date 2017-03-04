@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import * as actions from './actions'
 
-const yearRangeReducer = (state = [], action) => {
+const loadedYearsReducer = (state = [], action) => {
   switch(action.type) {
-    case actions.SET_NEW_YEAR_RANGE:
-      state = action.payload
+    case actions.MARK_NEW_LOADED_YEAR:
+      state = [...state.slice(), action.payload]
       break;
   }
 
@@ -14,7 +14,7 @@ const yearRangeReducer = (state = [], action) => {
 const incidentsReducer = (state = [], action) => {
   switch(action.type) {
     case actions.RECEIVE_INCIDENTS:
-      state = [...state.slice(), ...action.payload]
+      state = [...state.slice(), ...action.payload.slice()]
       break;
   }
 
@@ -22,7 +22,7 @@ const incidentsReducer = (state = [], action) => {
 }
 
 const rootReducer = combineReducers({
-  yearRange: yearRangeReducer,
+  loadedYears: loadedYearsReducer,
   incidents: incidentsReducer
 })
 
