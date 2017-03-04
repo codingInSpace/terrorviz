@@ -33,15 +33,38 @@ function getYear(req, res) {
   db.incidents.find({'iyear': year})
     .toArray()
     .then(data => {
-      res.json(data)
+      return res.json(data)
     })
     .catch(reason => {
       console.error(reason)
     })
 }
 
+function getYearRange(req, res) {
+  const years = req.params.range
+
+  if (years.length > 8)
+    return res.json([{status: 500, msg: 'Bad input'}])
+
+  const year1 = parseFloat(years.slice(0, 4))
+  const year2 = parseFloat(years.slice(4, 8))
+
+  db.incidents.find({
+    'iyear': { '$gte': year1, '$lte': year2 }
+  })
+    .toArray()
+    .then(data => {
+      return res.json(data)
+    })
+    .catch(reason => {
+      console.error(reason)
+    })
+
+}
+
 export default {
   list,
   test,
-  getYear
+  getYear,
+  getYearRange
 }

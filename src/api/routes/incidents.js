@@ -14,6 +14,11 @@ router.route('/:limit')
 router.route('/year/:y')
   .get(incidentCtrl.getYear)
 
+// api/incidents/yearrange/xxxxxxxx -- list all for given year range param
+// example: api/incidents/yearrange/19982002 for 1998 to and including 2002
+router.route('/yearrange/:range')
+  .get(incidentCtrl.getYearRange)
+
 // api/incidents/test -- get one incident to see that it works
 router.route('/test')
   .get(incidentCtrl.test)
