@@ -26,7 +26,7 @@ const yearRange = new YearRange()
 //    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 //  });
 
-const initialYearRange = [1995]
+const initialYearRange = [1995, 1996]
 store.dispatch({type: actions.GET_INCIDENTS, payload: initialYearRange})
 
 let currentIncidentCount

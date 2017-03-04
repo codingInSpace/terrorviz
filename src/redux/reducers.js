@@ -14,7 +14,7 @@ const loadedYearsReducer = (state = [], action) => {
 const incidentsReducer = (state = [], action) => {
   switch(action.type) {
     case actions.RECEIVE_INCIDENTS:
-      state = [...state.slice(), ...action.payload.slice()]
+      state = [...state.slice(), ...action.payload]
       break;
   }
 
