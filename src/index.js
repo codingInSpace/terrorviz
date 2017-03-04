@@ -31,4 +31,5 @@ store.dispatch({type: actions.GET_INCIDENTS, payload: initialYearRange})
 
 store.subscribe(() => {
   console.log(store.getState())
+  map.draw(store.getState().incidents)
 })

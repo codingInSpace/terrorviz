@@ -1,8 +1,7 @@
-import request from 'axios';
-import { call, put } from 'redux-saga/effects';
-import { takeLatest } from 'redux-saga';
-import * as actions from './actions';
-
+import request from 'axios'
+import { call, put } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga/effects'
+import * as actions from './actions'
 
 const loader = document.querySelector('#map-loading-spinner')
 const snackbarContainer = document.querySelector('#simple-toast');
