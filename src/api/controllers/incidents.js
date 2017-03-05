@@ -40,6 +40,26 @@ function getYear(req, res) {
     })
 }
 
+function getYears(req, res) {
+  const years = req.body.rangeToGet
+
+  if (!years)
+    return res.json([{status: 500, msg: 'Undefined input'}])
+
+  console.log(years)
+
+  db.incidents.find({
+    'iyear': { '$in': years }
+  })
+    .toArray()
+    .then(data => {
+      return res.json(data)
+    })
+    .catch(reason => {
+      console.error(reason)
+    })
+}
+
 function getYearRange(req, res) {
   const years = req.params.range
 
@@ -66,5 +86,6 @@ export default {
   list,
   test,
   getYear,
+  getYears,
   getYearRange
 }

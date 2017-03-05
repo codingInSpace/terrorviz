@@ -8,44 +8,50 @@ const snackbarContainer = document.querySelector('#simple-toast');
 const getLoadedYears = state => state.loadedYears
 
 export const getIncidents = function * (action) {
-  let reqUrl = `${process.env.API_HOST}/incidents/`
-  let rangeToGet = action.payload
+  if (!action.payload)
+    return
+
+  let reqUrl = `${process.env.API_HOST}/incidents/years`
+  let firstAndLastYear = action.payload.slice()
   const loadedYears = yield select(getLoadedYears)
 
   // Set the range as range to show
-  yield put({type: actions.SET_RANGE_TO_SHOW, payload: rangeToGet})
+  yield put({type: actions.SET_RANGE_TO_SHOW, payload: firstAndLastYear})
 
   // Show loading spinner
   loader.style.display = 'block'
 
+  // Will contain years to request from api
+  let rangeToGet = []
+
   // Handle range
-  if (rangeToGet.length < 2) {
-    if (loadedYears.includes(rangeToGet[0]))
+  if (firstAndLastYear.length < 2) {
+    if (loadedYears.includes(firstAndLastYear[0])) {
+      loader.style.display = 'none'
       return //no need to request the year
-    else
-      reqUrl += `year/${rangeToGet[0]}` //request for single year
+    } else {
+      rangeToGet = [firstAndLastYear[0]]
+    }
   } else {
 
     // Limit range to what doesn't already exist on client
     const newRange = []
     let counter = 0
-    while(rangeToGet[0] + counter !== rangeToGet[1]) {
-      const year = rangeToGet[0] + counter
+    while((firstAndLastYear[0] + counter) <= firstAndLastYear[1]) {
+      const year = (firstAndLastYear[0] + counter)
       if (!loadedYears.includes(year))
         newRange.push(year)
 
       ++counter
     }
-    if (!loadedYears.includes(rangeToGet[1]))
-      newRange.push(rangeToGet[1])
 
     rangeToGet = newRange.slice()
-
-    reqUrl += `yearrange/${rangeToGet[0]}${rangeToGet[1]}` //Request for range of years
+    console.log(rangeToGet)
   }
 
   try {
-    const returnData = yield call(request.get, reqUrl)
+    console.log('making request')
+    const returnData = yield call(request.post, reqUrl, {rangeToGet})
     const data = returnData.data
 
     if (!data || typeof data === 'string')
@@ -58,15 +64,13 @@ export const getIncidents = function * (action) {
 
     } else {
       let counter = 0
-      while (rangeToGet[0] + counter !== rangeToGet[1]) {
-        const year = rangeToGet[0] + counter
+      while ((rangeToGet[0] + counter) <= rangeToGet[rangeToGet.length - 1]) {
+        const year = (rangeToGet[0] + counter)
         if(!loadedYears.includes(year))
           yield put({type: actions.MARK_NEW_LOADED_YEAR, payload: year})
 
         ++counter
       }
-      if(!loadedYears.includes(rangeToGet[1]))
-        yield put({type: actions.MARK_NEW_LOADED_YEAR, payload: rangeToGet[1]})
     }
 
     yield put({type: actions.RECEIVE_INCIDENTS, payload: data})

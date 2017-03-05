@@ -14,6 +14,10 @@ const loadedYearsReducer = (state = [], action) => {
 const rangeToShowReducer = (state = [], action) => {
   switch(action.type) {
     case actions.SET_RANGE_TO_SHOW:
+
+      if (action.payload.length === 1)
+        action.payload = [action.payload[0], null]
+
       state = action.payload
       break;
   }

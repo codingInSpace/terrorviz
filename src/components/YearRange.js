@@ -1,4 +1,6 @@
 import moment from 'moment'
+//import store from '../redux/store'
+//import * as actions from '../redux/actions'
 import {
   brush,
   select,
@@ -16,7 +18,9 @@ import {
 } from 'd3'
 
 class YearRange {
-  constructor(svgWidth = 1600, svgHeight = 80) {
+  constructor(svgWidth = 1600, svgHeight = 80, getRange) {
+    this.getRange = getRange
+
     this.svg = select('body').append('svg')
       .attr('width', svgWidth)
       .attr('height', svgHeight)
@@ -94,10 +98,21 @@ class YearRange {
       t1[1] = timeYear.offset(t1[0]);
     }
 
-    const year1 = moment(t1[0]).format('YYYY')
-    const year2 = moment(t1[1]).subtract(1, 'y').format('YYYY')
+    const year1 = parseFloat(moment(t1[0]).format('YYYY'))
+    const year2 = parseFloat(moment(t1[1]).subtract(1, 'y').format('YYYY'))
 
     select('.brush').transition().call(event.target.move, t1.map(this.x));
+
+    console.log(`requesting for ${year1} and ${year2}`)
+
+    let data
+    if (year1 !== year2)
+      data = [year1, year2]
+    else
+      data = [year1]
+
+    this.getRange(data)
+
   }
 }
 
