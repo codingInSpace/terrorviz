@@ -17,11 +17,15 @@ store.subscribe(() => {
 
   if (state.mapShouldUpdate) {
     let incidents = []
-    const interval = state.rangeToShow
-    for (let i = 0; i < state.incidents.length; ++i) {
-      const year = parseFloat(state.incidents[i]['iyear'])
-      if (year >= interval[0] && year <= (interval[1] || interval[0]))
-        incidents.push(state.incidents[i])
+    const interval = state.rangeToShow.slice()
+
+    if (!interval[1])
+      incidents.push(...state.incidents.get(interval[0].toString()))
+    else {
+      while(interval[0] !== (interval[1] + 1)) {
+        incidents.push(...state.incidents.get(interval[0].toString()))
+        interval[0] = (interval[0] + 1)
+      }
     }
 
     map.draw(incidents)

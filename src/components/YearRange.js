@@ -101,9 +101,8 @@ class YearRange {
     const year1 = parseFloat(moment(t1[0]).format('YYYY'))
     const year2 = parseFloat(moment(t1[1]).subtract(1, 'y').format('YYYY'))
 
+    // Move selection to valid spot
     select('.brush').transition().call(event.target.move, t1.map(this.x));
-
-    console.log(`requesting for ${year1} and ${year2}`)
 
     let data
     if (year1 !== year2)
@@ -112,7 +111,6 @@ class YearRange {
       data = [year1]
 
     this.getRange(data)
-
   }
 }
 

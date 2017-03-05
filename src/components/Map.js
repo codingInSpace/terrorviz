@@ -70,6 +70,8 @@ class Map {
     else
       this.reset()
 
+    console.log('Drawing data on map...')
+
     this.g.selectAll("circle")
       .data(data)
       .enter()
@@ -105,6 +107,8 @@ class Map {
       .on("click", d => console.log(d['country_txt']));
 
     this.svg.call(this.zoomBehavior)
+
+    console.log('Data on map updated.')
   }
 }
 

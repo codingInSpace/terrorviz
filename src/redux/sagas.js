@@ -55,7 +55,6 @@ export const getIncidents = function * (action) {
     }
 
     rangeToGet = newRange.slice()
-    console.log(rangeToGet)
   }
 
   try {
@@ -81,11 +80,31 @@ export const getIncidents = function * (action) {
       }
     }
 
+    // Handle data
     if (rangeToGet.length > 0) {
-      console.log('receiving incidents')
-      yield put({type: actions.RECEIVE_INCIDENTS, payload: data})
+
+      // Prepare object for separated data
+      let separatedData = {}
+      for (let i = 0; i < rangeToGet.length; ++i) {
+        separatedData[rangeToGet[i]] = []
+      }
+
+      // Separate data
+      for (let i = 0; i < data.length; ++i) {
+        separatedData[data[i]['iyear']].push(data[i])
+      }
+
+      // Store separated data in state
+      for (let i = 0; i < Object.keys(separatedData).length; ++i) {
+        const payload = {
+          year: Object.keys(separatedData)[i],
+          data: Object.values(separatedData)[i]
+        }
+
+        yield put({type: actions.RECEIVE_INCIDENTS_OF_A_YEAR, payload })
+      }
     }
-    console.log('received')
+
     // After incidents received in state, set flag to update map
     if (mapShouldUpdate)
       yield put({type: actions.SET_MAP_SHOULD_UPDATE, payload: true})

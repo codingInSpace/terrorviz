@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { Map } from 'immutable'
 import * as actions from './actions'
 
 const loadedYearsReducer = (state = [], action) => {
@@ -25,10 +26,10 @@ const rangeToShowReducer = (state = [], action) => {
   return state
 }
 
-const incidentsReducer = (state = [], action) => {
+const incidentsReducer = (state = Map({}), action) => {
   switch(action.type) {
-    case actions.RECEIVE_INCIDENTS:
-      state = [...state.slice(), ...action.payload]
+    case actions.RECEIVE_INCIDENTS_OF_A_YEAR:
+      state = state.set(action.payload.year.toString(), action.payload.data)
       break;
   }
 
