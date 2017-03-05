@@ -18,10 +18,9 @@ store.subscribe(() => {
   if (state.mapShouldUpdate) {
     let incidents = []
     const interval = state.rangeToShow
-    console.log(interval)
     for (let i = 0; i < state.incidents.length; ++i) {
       const year = parseFloat(state.incidents[i]['iyear'])
-      if (year >= interval[0] || year <= interval[1])
+      if (year >= interval[0] && year <= (interval[1] || interval[0]))
         incidents.push(state.incidents[i])
     }
 

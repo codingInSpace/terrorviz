@@ -13,6 +13,8 @@ import {
  */
 class Map {
   constructor(width = 1600, height = 800) {
+    this.hasDrawn = false
+
     this.projection = geoMercator()
       .scale((width - 3) / (2 * Math.PI))
       .translate([width / 2, height / 1.75]);
@@ -56,7 +58,18 @@ class Map {
     })
   }
 
+  reset() {
+    this.g.selectAll('circle').remove()
+  }
+
   draw(data) {
+
+    // Reset previously plotted incidents if they exist
+    if (!this.hasDrawn)
+      this.hasDrawn = true
+    else
+      this.reset()
+
     this.g.selectAll("circle")
       .data(data)
       .enter()

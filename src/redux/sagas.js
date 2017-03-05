@@ -33,6 +33,10 @@ export const getIncidents = function * (action) {
   if (firstAndLastYear.length < 2) {
     if (loadedYears.includes(firstAndLastYear[0])) {
       loader.style.display = 'none'
+
+      if (mapShouldUpdate)
+        yield put({type: actions.SET_MAP_SHOULD_UPDATE, payload: true})
+
       return //no need to request the year
     } else {
       rangeToGet = [firstAndLastYear[0]]
@@ -66,7 +70,7 @@ export const getIncidents = function * (action) {
       if(!loadedYears.includes(rangeToGet[0]))
         yield put({type: actions.MARK_NEW_LOADED_YEAR, payload: rangeToGet[0]})
 
-    } else {
+    } else if (rangeToGet.length > 1) {
       let counter = 0
       while ((rangeToGet[0] + counter) <= rangeToGet[rangeToGet.length - 1]) {
         const year = (rangeToGet[0] + counter)
@@ -77,12 +81,16 @@ export const getIncidents = function * (action) {
       }
     }
 
-    yield put({type: actions.RECEIVE_INCIDENTS, payload: data})
-    loader.style.display = 'none'
-
+    if (rangeToGet.length > 0) {
+      console.log('receiving incidents')
+      yield put({type: actions.RECEIVE_INCIDENTS, payload: data})
+    }
+    console.log('received')
     // After incidents received in state, set flag to update map
     if (mapShouldUpdate)
       yield put({type: actions.SET_MAP_SHOULD_UPDATE, payload: true})
+
+    yield loader.style.display = 'none'
 
   } catch (error) {
     loader.style.display = 'none'
