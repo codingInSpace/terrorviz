@@ -6,6 +6,7 @@ const loader = document.querySelector('#map-loading-spinner')
 const snackbarContainer = document.querySelector('#simple-toast');
 
 const getLoadedYears = state => state.loadedYears
+const getRangeToShow = state => state.rangeToShow
 
 export const getIncidents = function * (action) {
   if (!action.payload)
@@ -14,6 +15,10 @@ export const getIncidents = function * (action) {
   let reqUrl = `${process.env.API_HOST}/incidents/years`
   let firstAndLastYear = action.payload.slice()
   const loadedYears = yield select(getLoadedYears)
+
+  // Check if selected years are different to current
+  const rangeToShow = yield select(getRangeToShow)
+  const mapShouldUpdate = (firstAndLastYear[0] !== rangeToShow[0] || firstAndLastYear[1] !== rangeToShow[1])
 
   // Set the range as range to show
   yield put({type: actions.SET_RANGE_TO_SHOW, payload: firstAndLastYear})
@@ -50,7 +55,6 @@ export const getIncidents = function * (action) {
   }
 
   try {
-    console.log('making request')
     const returnData = yield call(request.post, reqUrl, {rangeToGet})
     const data = returnData.data
 
@@ -75,6 +79,10 @@ export const getIncidents = function * (action) {
 
     yield put({type: actions.RECEIVE_INCIDENTS, payload: data})
     loader.style.display = 'none'
+
+    // After incidents received in state, set flag to update map
+    if (mapShouldUpdate)
+      yield put({type: actions.SET_MAP_SHOULD_UPDATE, payload: true})
 
   } catch (error) {
     loader.style.display = 'none'

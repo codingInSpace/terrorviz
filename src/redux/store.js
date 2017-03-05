@@ -5,12 +5,14 @@ import { rootSaga } from './sagas'
 
 const sagaMiddleware = createSagaMiddleware()
 
+// Use redux dev tools if installed as chrome extension
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const initialState = {
   incidents: [],
   loadedYears: [],
-  rangeToShow: []
+  rangeToShow: [],
+  mapShouldUpdate: false
 }
 
 const store = createStore(

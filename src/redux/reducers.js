@@ -35,10 +35,22 @@ const incidentsReducer = (state = [], action) => {
   return state
 }
 
+const mapUpdateReducer = (state = false, action) => {
+  switch(action.type) {
+    case actions.SET_MAP_SHOULD_UPDATE:
+      state = action.payload
+      break;
+  }
+
+  return state
+
+}
+
 const rootReducer = combineReducers({
   loadedYears: loadedYearsReducer,
   incidents: incidentsReducer,
-  rangeToShow: rangeToShowReducer
+  rangeToShow: rangeToShowReducer,
+  mapShouldUpdate: mapUpdateReducer
 })
 
 export default rootReducer
