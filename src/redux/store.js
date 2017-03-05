@@ -9,7 +9,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const initialState = {
   incidents: [],
-  loadedYears: []
+  loadedYears: [],
+  rangeToShow: []
 }
 
 const store = createStore(

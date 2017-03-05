@@ -11,6 +11,16 @@ const loadedYearsReducer = (state = [], action) => {
   return state
 }
 
+const rangeToShowReducer = (state = [], action) => {
+  switch(action.type) {
+    case actions.SET_RANGE_TO_SHOW:
+      state = action.payload
+      break;
+  }
+
+  return state
+}
+
 const incidentsReducer = (state = [], action) => {
   switch(action.type) {
     case actions.RECEIVE_INCIDENTS:
@@ -23,7 +33,8 @@ const incidentsReducer = (state = [], action) => {
 
 const rootReducer = combineReducers({
   loadedYears: loadedYearsReducer,
-  incidents: incidentsReducer
+  incidents: incidentsReducer,
+  rangeToShow: rangeToShowReducer
 })
 
 export default rootReducer

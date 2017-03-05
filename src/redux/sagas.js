@@ -12,6 +12,9 @@ export const getIncidents = function * (action) {
   let rangeToGet = action.payload
   const loadedYears = yield select(getLoadedYears)
 
+  // Set the range as range to show
+  yield put({type: actions.SET_RANGE_TO_SHOW, payload: rangeToGet})
+
   // Show loading spinner
   loader.style.display = 'block'
 
