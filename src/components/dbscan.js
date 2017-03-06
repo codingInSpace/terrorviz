@@ -1,7 +1,6 @@
 
-function dbscan(data) {
-
-    // console.log("Running DBScan...");
+const dbScan = data => {
+    console.log(data.length);
 
     // todo! 23.6 med chrome
     // todo! 26 med safari
@@ -18,8 +17,8 @@ function dbscan(data) {
     // 14.06 med full_full_data med if sats!!!!
     // 2min och 30.13 utan if
 
-    var minPts = 50; //50 //1000
-    var epsilon = 2; //2 //4
+    var minPts = 10; //50 //1000
+    var epsilon = 1; //2 //4
 
     var clusterIndex = 0;
     var inData = data;
@@ -32,8 +31,6 @@ function dbscan(data) {
     // index = 3, Central and South Africa
     // index = 4, India and Oceania
     var geoAreaIndices = [];
-
-    var counter = 0;
 
     // Divide world into 4 areas, give items correct index
     for(var i = 0; i < inData.length; i++){
@@ -161,4 +158,6 @@ function dbscan(data) {
 
     return indexArray;
 };
+
+export default dbScan
 

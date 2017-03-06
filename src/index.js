@@ -2,6 +2,7 @@ import store from './redux/store'
 import * as actions from './redux/actions'
 
 import Map from './components/Map'
+import dbscan from './components/dbscan'
 import YearRange from './components/YearRange'
 
 const getIncidentsFromRange = range => store.dispatch({

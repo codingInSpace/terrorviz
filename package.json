@@ -29,6 +29,7 @@
     "cors": "^2.8.1",
     "css-loader": "^0.26.1",
     "d3": "^4.6.0",
+    "d3-scale": "^1.0.4",
     "dotenv": "^4.0.0",
     "dotenv-webpack": "^1.4.1",
     "express": "^4.14.1",
