@@ -16,9 +16,8 @@ import * as scale from 'd3-scale'
 class Map {
     constructor(width = 1600, height = 800) {
         this.hasDrawn = false;
+        this.clickableClustersActive = false
         this.data;
-
-
 
         this.projection = geoMercator()
             .scale((width - 3) / (2 * Math.PI))
@@ -69,11 +68,20 @@ class Map {
         })
     }
 
-    reset() {
-        this.g.selectAll('circle').remove()
+  /**
+   * Remove all items drawn on Map
+   */
+  reset() {
+      this.g.selectAll('circle').remove()
+      this.svg.selectAll('circle').remove()
+      this.svg.selectAll('pointGroup').remove()
     }
 
-    draw(data) {
+  /**
+   * Draw items on Map
+   * @param {array} data - Array of incidents data to display and project
+   */
+  draw(data) {
 
         // Reset previously plotted incidents if they exist
         if (!this.hasDrawn)
@@ -123,37 +131,39 @@ class Map {
     }
 
     dbscanOnClick() {
+      let dbscanArr = dbScan(this.data);
 
-        console.log("DBscan is called!!");
+      let colorScale = scale.scaleOrdinal(scale.schemeCategory20c);
 
-        var dbscanArr = dbScan(this.data);
+      this.g.selectAll("circle")
+        .style("fill", function (d, i) {
 
-        var colorScale = scale.scaleOrdinal(scale.schemeCategory20c);
+          if (dbscanArr[i] === -1)
+            return "white";
+          else {
+            return colorScale(dbscanArr[i]);
+          }
+        })
+        .style("opacity", function (d, i) {
 
-        this.g.selectAll("circle")
-            .style("fill", function (d, i) {
+          if (dbscanArr[i] === -1)
+            return 0;
+        })
 
-                if(dbscanArr[i] === -1)
-                    return "white";
-                else{
-                    return colorScale(dbscanArr[i]);
-                }})
-            .style("opacity", function(d,i){
+      if (this.clickableClustersActive)
+        this.renderClusterCircles(dbscanArr)
+    }
 
-                if(dbscanArr[i] === -1)
-                    return 0;
-            })
+    renderClusterCircles(dbscanArr) {
+        let numberOfClusters = Math.max(...dbscanArr);
+        let clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
+        let currentDataItem;
 
-
-        var numberOfClusters = Math.max(...dbscanArr);
-        var clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
-        var currentDataItem;
-
-        var clusterMeanLon = [];
-        var clusterMeanLat = [];
+        let clusterMeanLon = [];
+        let clusterMeanLat = [];
 
         // initialize clusterSums
-        for(var k = 0; k < numberOfClusters; k++){
+        for(let k = 0; k < numberOfClusters; k++){
 
             clusterSumsLon.push(0);
             clusterSumsLat.push(0);
@@ -179,29 +189,14 @@ class Map {
             clusterMeanLat[j] = clusterSumsLat[j] / numberOfpointsInCluster[j];
         }
 
-        //*************************************************************************************************
-        //*************************************************************************************************
-        //*************************************************************************************************
-
-
-
-
-
-
-
-
         let radiusScale = scale.scaleLinear()
             .range([0,3])
             .domain([1,10]);
 
-
-
         let clusterCentroids = [];
 
         for(let o = 0; o < numberOfClusters; o++) {
-
             let obj = {
-
                 lon: clusterMeanLon[o],
                 lat:clusterMeanLat[o],
                 numberOfPoints:numberOfpointsInCluster[o]
@@ -209,8 +204,6 @@ class Map {
 
             clusterCentroids.push(obj);
         }
-
-
 
         this.pointGroup = this.svg.append("pointGroup");
 
@@ -221,26 +214,22 @@ class Map {
             .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
             .style("opacity", 0.6);
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //*************************************************************************************************
-        //*************************************************************************************************
-        //*************************************************************************************************
-
-
-
-
     }
+
+  /**
+   * Set clickable clusters state
+   * @param {boolean} state - If clusters should be rendered as clickable objects or not
+   */
+  setState(state) {
+    this.clickableClustersActive = state
+  }
+
+  /**
+   * Get clickable clusters state
+   * @returns {boolean}
+   */
+  getState() {
+    return this.clickableClustersActive
+  }
 }
 export default Map

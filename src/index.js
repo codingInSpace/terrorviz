@@ -56,10 +56,13 @@ store.subscribe(() => {
     store.dispatch({type: actions.SET_MAP_SHOULD_UPDATE, payload: false})
   }
 
+  // Update for cluster info active toggle state
   if (previousClusterToggleState !== currentClusterToggleState) {
     clusterInfoToggle.setState(state.clusterInfoToggle)
+    map.setState(state.clusterInfoToggle)
   }
 
+  // Update cluster info box
   if (state.clusterInfo.visible) {
     clusterInfoBox.show(state.clusterInfo.data)
   } else {
