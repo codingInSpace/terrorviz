@@ -2,7 +2,7 @@
 const dbScan = data => {
     console.log(data.length);
 
-    var minPts = 20; //50 //1000
+    var minPts = 100; //50 //1000
     var epsilon = 1; //2 //4
 
     var clusterIndex = 0;
