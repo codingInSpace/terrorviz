@@ -56,6 +56,20 @@ const clusterInfoReducer = (state = {}, action) => {
   return state
 }
 
+const clusterInfoToggleReducer = (state = false, action) => {
+  switch(action.type) {
+    case actions.SET_CLUSTER_INFO_ACTIVE:
+      state = true
+      break;
+
+    case actions.SET_CLUSTER_INFO_INACTIVE:
+      state = false
+      break;
+  }
+
+  return state
+}
+
 const mapUpdateReducer = (state = false, action) => {
   switch(action.type) {
     case actions.SET_MAP_SHOULD_UPDATE:
@@ -72,7 +86,8 @@ const rootReducer = combineReducers({
   incidents: incidentsReducer,
   rangeToShow: rangeToShowReducer,
   mapShouldUpdate: mapUpdateReducer,
-  clusterInfo: clusterInfoReducer
+  clusterInfo: clusterInfoReducer,
+  clusterInfoToggle: clusterInfoToggleReducer
 })
 
 export default rootReducer

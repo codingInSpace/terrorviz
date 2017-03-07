@@ -17,7 +17,8 @@ const initialState = {
   clusterInfo: {
     visible: false,
     data: null
-  }
+  },
+  clusterInfoToggle: false
 }
 
 const store = createStore(

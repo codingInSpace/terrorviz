@@ -47,7 +47,14 @@ p1 {
     position: absolute;
 	z-index: 99;
 	top: 6%;
-	left: 2vw;
+	left: 30px;
+}
+
+#cluster-info-toggle {
+	position: absolute;
+	z-index: 99;
+	top: 12%;
+	left: 30px;
 }
 
 #cluster-info-card {
