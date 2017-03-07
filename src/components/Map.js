@@ -149,7 +149,7 @@ class Map {
         //*************************************************************************************************
         //*************************************************************************************************
 
-        var numberOfClusters = 10;
+        var numberOfClusters = Math.max(...dbscanArr);
         var clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
         var currentDataItem;
 
