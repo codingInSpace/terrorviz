@@ -14,11 +14,12 @@ import * as scale from 'd3-scale'
  * Main map class
  */
 class Map {
-    constructor(width = 1600, height = 800) {
+    constructor(width = 1600, height = 800, showClusterInfo, hideClusterInfo) {
         this.hasDrawn = false;
+        this.clickableClustersActive = false
+        this.showClusterInfo = showClusterInfo
+        this.hideClusterInfo = hideClusterInfo
         this.data;
-
-
 
         this.projection = geoMercator()
             .scale((width - 3) / (2 * Math.PI))
@@ -69,11 +70,19 @@ class Map {
         })
     }
 
-    reset() {
-        this.g.selectAll('circle').remove()
+  /**
+   * Remove all items drawn on Map
+   */
+  reset() {
+      this.g.selectAll('circle').remove()
+      this.g.selectAll('pointGroup').remove()
     }
 
-    draw(data) {
+  /**
+   * Draw items on Map
+   * @param {Array} data - Array of incidents data to display and project
+   */
+  draw(data) {
 
         // Reset previously plotted incidents if they exist
         if (!this.hasDrawn)
@@ -123,38 +132,37 @@ class Map {
     }
 
     dbscanOnClick() {
+      let dbscanArr = dbScan(this.data);
 
-        console.log("DBscan is called!!");
+      let colorScale = scale.scaleOrdinal(scale.schemeCategory20c);
 
-        var dbscanArr = dbScan(this.data);
+      this.g.selectAll("circle")
+        .style("fill", function (d, i) {
 
-        var colorScale = scale.scaleOrdinal(scale.schemeCategory20c);
+          if (dbscanArr[i] === -1)
+            return "white";
+          else {
+            return colorScale(dbscanArr[i]);
+          }
+        })
+        .style("opacity", function (d, i) {
 
-        this.g.selectAll("circle")
-            .style("fill", function (d, i) {
+          if (dbscanArr[i] === -1)
+            return 0;
+        })
 
-                if(dbscanArr[i] === -1)
-                    return "white";
-                else{
-                    return colorScale(dbscanArr[i]);
-                }})
-            .style("opacity", function(d,i){
+      if (this.clickableClustersActive)
+        this.renderClusterCircles(dbscanArr, colorScale)
+    }
 
-                if(dbscanArr[i] === -1)
-                    return 0;
-            })
+    renderClusterCircles(dbscanArr, colorScale) {
+        let numberOfClusters = Math.max(...dbscanArr);
+        let clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
+        let currentDataItem;
 
-
-        var numberOfClusters = Math.max(...dbscanArr);
-
-
-        console.log("numberOfCluster = " + numberOfClusters);
-
-        var clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
-        var currentDataItem;
-
-        var clusterMeanLon = [];
-        var clusterMeanLat = [];
+        let clusterMeanLon = [];
+        let clusterMeanLat = [];
+        let clusterFatalities = [];
 
         // initialize clusterSums
         for(let k = 0; k < numberOfClusters; k++){
@@ -164,6 +172,7 @@ class Map {
             numberOfpointsInCluster.push(0);
             clusterMeanLon.push(0);
             clusterMeanLat.push(0);
+            clusterFatalities.push(0)
         }
 
         for(let i = 0; i < this.data.length; i++){
@@ -174,6 +183,7 @@ class Map {
                 numberOfpointsInCluster[dbscanArr[i]-1] += 1;
                 clusterSumsLon[dbscanArr[i]-1] += +currentDataItem.longitude;
                 clusterSumsLat[dbscanArr[i]-1] += +currentDataItem.latitude;
+                clusterFatalities[dbscanArr[i]-1] += +currentDataItem.nkill;
             }
         }
 
@@ -183,11 +193,6 @@ class Map {
             clusterMeanLat[j] = clusterSumsLat[j] / numberOfpointsInCluster[j];
         }
 
-
-        console.log("max = " + Math.max(...numberOfpointsInCluster));
-
-
-
         let radiusScale = scale.scaleLinear()
             .domain([0,20])
             .range([0,2]);
@@ -195,42 +200,50 @@ class Map {
         let clusterCentroids = [];
 
         for(let o = 0; o < numberOfClusters; o++) {
-
             let obj = {
-
                 lon: clusterMeanLon[o],
                 lat:clusterMeanLat[o],
                 numberOfPoints:numberOfpointsInCluster[o],
+                fatalities: clusterFatalities[o],
                 clusterColor:o+1
             };
 
             clusterCentroids.push(obj);
-
-            console.log("obj!!!"+obj.clusterColor);
-        }
-
-        for(var indexNew = 0; indexNew < numberOfClusters; indexNew++){
-
-            console.log(clusterCentroids[indexNew].clusterColor);
         }
 
         this.pointGroup = this.g.append("pointGroup");
 
-
+        // Remove original dots
+        this.g.selectAll('circle').remove();
+      
         this.g.selectAll("pointGroup").select("circle")
             .data(clusterCentroids)
             .enter().append("circle")
-            .attr("r", d => {
-                console.log(d)
-                return radiusScale(d.numberOfPoints)
-            })
+            .attr("r", d => radiusScale(d.numberOfPoints))
             .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
             .style("opacity", 0.9)
-            .style("fill", function(d){
+            .style("fill", d => colorScale(d.clusterColor))
+            .on('click', d => {
+                this.showClusterInfo(d)
+              });
 
-                console.log(d);
-                return colorScale(d.clusterColor)});
     }
+
+  /**
+   * Set clickable clusters state
+   * @param {boolean} state - If clusters should be rendered as clickable objects or not
+   */
+  setState(state) {
+    this.clickableClustersActive = state
+  }
+
+  /**
+   * Get clickable clusters state
+   * @returns {boolean}
+   */
+  getState() {
+    return this.clickableClustersActive
+  }
 }
 export default Map
