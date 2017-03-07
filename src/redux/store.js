@@ -13,7 +13,12 @@ const initialState = {
   incidents: Map({}),
   loadedYears: [],
   rangeToShow: [],
-  mapShouldUpdate: false
+  mapShouldUpdate: false,
+  clusterInfo: {
+    visible: false,
+    data: null
+  },
+  clusterInfoToggle: false
 }
 
 const store = createStore(

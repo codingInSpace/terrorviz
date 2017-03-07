@@ -4,17 +4,40 @@ import * as actions from './redux/actions'
 import Map from './components/Map'
 import dbscan from './components/dbscan'
 import YearRange from './components/YearRange'
+import CLusterInfoToggle from './components/ClusterInfoToggle'
+import CLusterInfoBox from './components/ClusterInfoBox'
 
 const getIncidentsFromRange = range => store.dispatch({
   type: actions.GET_INCIDENTS,
   payload: range
 })
+const showClusterInfo = data => store.dispatch({
+  type: actions.SHOW_CLUSTER_INFO,
+  payload: { visible: true, data: data }
+})
+const hideClusterInfo = data => store.dispatch({
+  type: actions.SHOW_CLUSTER_INFO,
+  payload: { visible: false, data: null }
+})
+const setCLusterInfoActive = () => store.dispatch({
+  type: actions.SET_CLUSTER_INFO_ACTIVE, payload: true
+})
+const setCLusterInfoInactive = () => store.dispatch({
+  type: actions.SET_CLUSTER_INFO_INACTIVE, payload: false
+})
 
-const map = new Map()
-const yearRange = new YearRange(1600, 80, getIncidentsFromRange)
+const map = new Map(window.innerWidth, 750, showClusterInfo, hideClusterInfo)
+const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
+const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
+const clusterInfoBox = new CLusterInfoBox()
 
+let currentClusterToggleState
 store.subscribe(() => {
+  let previousClusterToggleState = currentClusterToggleState
+
   const state = store.getState()
+
+  currentClusterToggleState = state.clusterInfoToggle
 
   if (state.mapShouldUpdate) {
     let incidents = []
@@ -31,5 +54,15 @@ store.subscribe(() => {
 
     map.draw(incidents)
     store.dispatch({type: actions.SET_MAP_SHOULD_UPDATE, payload: false})
+  }
+
+  if (previousClusterToggleState !== currentClusterToggleState) {
+    clusterInfoToggle.setState(state.clusterInfoToggle)
+  }
+
+  if (state.clusterInfo.visible) {
+    clusterInfoBox.show(state.clusterInfo.data)
+  } else {
+    clusterInfoBox.hide()
   }
 })

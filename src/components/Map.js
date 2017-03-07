@@ -44,6 +44,8 @@ class Map {
 
         this.renderMap()
 
+        this.svg.call(this.zoomBehavior)
+
         const button = document.querySelector('#dbscan-button').addEventListener('click', () => {
           this.dbscanOnClick(this.data)
         })
@@ -116,8 +118,6 @@ class Map {
                     .style("opacity", 0);
             })
             .on("click", d => console.log(d['country_txt']));
-
-        this.svg.call(this.zoomBehavior)
 
         console.log('Data on map updated.')
     }
