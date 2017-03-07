@@ -184,7 +184,7 @@ class Map {
         }
 
 
-        console.log("max = " +Math.max(...numberOfpointsInCluster));
+        console.log("max = " + Math.max(...numberOfpointsInCluster));
 
 
 
