@@ -46,8 +46,8 @@ p1 {
 #dbscan-button {
     position: absolute;
 	z-index: 99;
-	bottom: 10%;
-	left: 3vw;
+	top: 6%;
+	left: 2vw;
 }
 
 #cluster-info-card {
