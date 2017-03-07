@@ -135,18 +135,59 @@ class Map {
 
                 if(dbscanArr[i] === -1)
                     return "white";
-                else {
+                else{
                     return colorScale(dbscanArr[i]);
-                }
-                })
+                }})
             .style("opacity", function(d,i){
 
                 if(dbscanArr[i] === -1)
                     return 0;
-
-
-
             })
+
+
+        //*************************************************************************************************
+        //*************************************************************************************************
+        //*************************************************************************************************
+
+        var numberOfClusters = 10;
+        var clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
+        var currentDataItem;
+
+        var clusterMeanLon = [];
+        var clusterMeanLat = [];
+
+        // initialize clusterSums
+        for(var k = 0; k < numberOfClusters; k++){
+
+            clusterSumsLon.push(0);
+            clusterSumsLat.push(0);
+            numberOfpointsInCluster.push(0);
+            clusterMeanLon.push(0);
+            clusterMeanLat.push(0);
+        }
+
+        for(var i = 0; i < this.data.length; i++){
+
+            currentDataItem = this.data[i];
+
+            if(dbscanArr[i] != -1) {
+                numberOfpointsInCluster[dbscanArr[i]-1] += 1;
+                clusterSumsLon[dbscanArr[i]-1] += +currentDataItem.longitude;
+                clusterSumsLat[dbscanArr[i]-1] += +currentDataItem.latitude;
+            }
+        }
+
+        for(var j = 0; j < numberOfClusters; j++){
+
+            clusterMeanLon[j] = clusterSumsLon[j] / numberOfpointsInCluster[j];
+            clusterMeanLat[j] = clusterSumsLat[j] / numberOfpointsInCluster[j];
+
+            console.log("clusterMean = [" + clusterMeanLon[j] + ", " + clusterMeanLat[j] + "]")
+        }
+
+        //*************************************************************************************************
+        //*************************************************************************************************
+        //*************************************************************************************************
     }
 }
 export default Map

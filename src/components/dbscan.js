@@ -2,21 +2,6 @@
 const dbScan = data => {
     console.log(data.length);
 
-    // todo! 23.6 med chrome
-    // todo! 26 med safari
-
-
-    // full_data
-    // 3.36 utan if eps=2 minPts=500
-    // 2.63 med if
-
-    // 4.46 utan if eps=4 minPts=1000
-    // 4.12 med if
-
-
-    // 14.06 med full_full_data med if sats!!!!
-    // 2min och 30.13 utan if
-
     var minPts = 10; //50 //1000
     var epsilon = 1; //2 //4
 
@@ -136,10 +121,6 @@ const dbScan = data => {
 
             tempLon = +inData[m].longitude;
             tempLat = +inData[m].latitude;
-
-            /////// SAVE THIS!!!!!!!!!!!!!!!!!!!
-           ////// if( (((tempLon - currentLon) < 0 ? -(tempLon - currentLon) : (tempLon - currentLon)) < epsilon/2 ) &&
-           /////      (((tempLat - currentLat) < 0 ? -(tempLat - currentLat) : (tempLat - currentLat)) < epsilon/2) ){
 
             if(geoAreaIndices[m] == currentGeoIndex){
 
