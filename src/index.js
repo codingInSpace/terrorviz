@@ -10,8 +10,8 @@ const getIncidentsFromRange = range => store.dispatch({
   payload: range
 })
 
-const map = new Map()
-const yearRange = new YearRange(1600, 80, getIncidentsFromRange)
+const map = new Map(window.innerWidth)
+const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
 
 store.subscribe(() => {
   const state = store.getState()
