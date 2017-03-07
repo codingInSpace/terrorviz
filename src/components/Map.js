@@ -14,9 +14,11 @@ import * as scale from 'd3-scale'
  * Main map class
  */
 class Map {
-    constructor(width = 1600, height = 800) {
+    constructor(width = 1600, height = 800, showClusterInfo, hideClusterInfo) {
         this.hasDrawn = false;
         this.clickableClustersActive = false
+        this.showClusterInfo = showClusterInfo
+        this.hideClusterInfo = hideClusterInfo
         this.data;
 
         this.projection = geoMercator()
@@ -79,7 +81,7 @@ class Map {
 
   /**
    * Draw items on Map
-   * @param {array} data - Array of incidents data to display and project
+   * @param {Array} data - Array of incidents data to display and project
    */
   draw(data) {
 
@@ -161,6 +163,7 @@ class Map {
 
         let clusterMeanLon = [];
         let clusterMeanLat = [];
+        let clusterFatalities = [];
 
         // initialize clusterSums
         for(let k = 0; k < numberOfClusters; k++){
@@ -170,6 +173,7 @@ class Map {
             numberOfpointsInCluster.push(0);
             clusterMeanLon.push(0);
             clusterMeanLat.push(0);
+            clusterFatalities.push(0)
         }
 
         for(let i = 0; i < this.data.length; i++){
@@ -180,6 +184,7 @@ class Map {
                 numberOfpointsInCluster[dbscanArr[i]-1] += 1;
                 clusterSumsLon[dbscanArr[i]-1] += +currentDataItem.longitude;
                 clusterSumsLat[dbscanArr[i]-1] += +currentDataItem.latitude;
+                clusterFatalities[dbscanArr[i]-1] += +currentDataItem.nkill;
             }
         }
 
@@ -198,8 +203,9 @@ class Map {
         for(let o = 0; o < numberOfClusters; o++) {
             let obj = {
                 lon: clusterMeanLon[o],
-                lat:clusterMeanLat[o],
-                numberOfPoints:numberOfpointsInCluster[o]
+                lat: clusterMeanLat[o],
+                numberOfPoints: numberOfpointsInCluster[o],
+                fatalities: clusterFatalities[o]
             };
 
             clusterCentroids.push(obj);
@@ -213,7 +219,10 @@ class Map {
             .attr("r", d => radiusScale(d.numberOfPoints))
             .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
-            .style("opacity", 0.6);
+            .style("opacity", 0.6)
+            .on('click', d => {
+              this.showClusterInfo(d)
+            })
     }
 
   /**

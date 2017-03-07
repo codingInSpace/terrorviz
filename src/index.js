@@ -11,13 +11,11 @@ const getIncidentsFromRange = range => store.dispatch({
   type: actions.GET_INCIDENTS,
   payload: range
 })
-const showClusterInfo = data => store.dispatch({
-  type: actions.SHOW_CLUSTER_INFO,
-  payload: { visible: true, data: data }
+const showClusterInfo = clusterObject => store.dispatch({
+  type: actions.SHOW_CLUSTER_INFO, payload: clusterObject
 })
-const hideClusterInfo = data => store.dispatch({
-  type: actions.SHOW_CLUSTER_INFO,
-  payload: { visible: false, data: null }
+const hideClusterInfo = () => store.dispatch({
+  type: actions.HIDE_CLUSTER_INFO, payload: null
 })
 const setCLusterInfoActive = () => store.dispatch({
   type: actions.SET_CLUSTER_INFO_ACTIVE, payload: true
@@ -29,7 +27,7 @@ const setCLusterInfoInactive = () => store.dispatch({
 const map = new Map(window.innerWidth, 750, showClusterInfo, hideClusterInfo)
 const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
 const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
-const clusterInfoBox = new CLusterInfoBox()
+const clusterInfoBox = new CLusterInfoBox(hideClusterInfo)
 
 let currentClusterToggleState
 store.subscribe(() => {
