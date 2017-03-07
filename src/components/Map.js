@@ -145,10 +145,6 @@ class Map {
             })
 
 
-        //*************************************************************************************************
-        //*************************************************************************************************
-        //*************************************************************************************************
-
         var numberOfClusters = Math.max(...dbscanArr);
         var clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
         var currentDataItem;
@@ -166,7 +162,7 @@ class Map {
             clusterMeanLat.push(0);
         }
 
-        for(var i = 0; i < this.data.length; i++){
+        for(let i = 0; i < this.data.length; i++){
 
             currentDataItem = this.data[i];
 
@@ -177,17 +173,74 @@ class Map {
             }
         }
 
-        for(var j = 0; j < numberOfClusters; j++){
+        for(let j = 0; j < numberOfClusters; j++){
 
             clusterMeanLon[j] = clusterSumsLon[j] / numberOfpointsInCluster[j];
             clusterMeanLat[j] = clusterSumsLat[j] / numberOfpointsInCluster[j];
-
-            console.log("clusterMean = [" + clusterMeanLon[j] + ", " + clusterMeanLat[j] + "]")
         }
 
         //*************************************************************************************************
         //*************************************************************************************************
         //*************************************************************************************************
+
+
+
+
+
+
+
+
+        let radiusScale = scale.scaleLinear()
+            .range([0,3])
+            .domain([1,10]);
+
+
+
+        let clusterCentroids = [];
+
+        for(let o = 0; o < numberOfClusters; o++) {
+
+            let obj = {
+
+                lon: clusterMeanLon[o],
+                lat:clusterMeanLat[o],
+                numberOfPoints:numberOfpointsInCluster[o]
+            };
+
+            clusterCentroids.push(obj);
+        }
+
+
+
+        this.pointGroup = this.svg.append("pointGroup");
+
+        this.svg.selectAll("pointGroup")
+            .data(clusterCentroids)
+            .enter().append("circle")
+            .attr("r", d => radiusScale(d.numberOfPoints))
+            .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
+            .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
+            .style("opacity", 0.6);
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //*************************************************************************************************
+        //*************************************************************************************************
+        //*************************************************************************************************
+
+
+
+
     }
 }
 export default Map
