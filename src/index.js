@@ -31,8 +31,13 @@ const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
 const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
 const clusterInfoBox = new CLusterInfoBox()
 
+let currentClusterToggleState
 store.subscribe(() => {
+  let previousClusterToggleState = currentClusterToggleState
+
   const state = store.getState()
+
+  currentClusterToggleState = state.clusterInfoToggle
 
   if (state.mapShouldUpdate) {
     let incidents = []
@@ -51,7 +56,9 @@ store.subscribe(() => {
     store.dispatch({type: actions.SET_MAP_SHOULD_UPDATE, payload: false})
   }
 
-  clusterInfoToggle.setState(state.clusterInfoToggle)
+  if (previousClusterToggleState !== currentClusterToggleState) {
+    clusterInfoToggle.setState(state.clusterInfoToggle)
+  }
 
   if (state.clusterInfo.visible) {
     clusterInfoBox.show(state.clusterInfo.data)
