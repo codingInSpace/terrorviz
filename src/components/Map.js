@@ -75,8 +75,7 @@ class Map {
    */
   reset() {
       this.g.selectAll('circle').remove()
-      this.svg.selectAll('circle').remove()
-      this.svg.selectAll('pointGroup').remove()
+      this.g.selectAll('pointGroup').remove()
     }
 
   /**
@@ -153,10 +152,10 @@ class Map {
         })
 
       if (this.clickableClustersActive)
-        this.renderClusterCircles(dbscanArr)
+        this.renderClusterCircles(dbscanArr, colorScale)
     }
 
-    renderClusterCircles(dbscanArr) {
+    renderClusterCircles(dbscanArr, colorScale) {
         let numberOfClusters = Math.max(...dbscanArr);
         let clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
         let currentDataItem;
@@ -195,34 +194,36 @@ class Map {
         }
 
         let radiusScale = scale.scaleLinear()
-            .range([0,3])
-            .domain([1,10]);
+            .domain([0,20])
+            .range([0,2]);
 
         let clusterCentroids = [];
 
         for(let o = 0; o < numberOfClusters; o++) {
             let obj = {
                 lon: clusterMeanLon[o],
-                lat: clusterMeanLat[o],
-                numberOfPoints: numberOfpointsInCluster[o],
-                fatalities: clusterFatalities[o]
+                lat:clusterMeanLat[o],
+                numberOfPoints:numberOfpointsInCluster[o],
+                fatalities: clusterFatalities[o],
+                clusterColor:o+1
             };
 
             clusterCentroids.push(obj);
         }
 
-        this.pointGroup = this.svg.append("pointGroup");
+        this.pointGroup = this.g.append("pointGroup");
 
-        this.svg.selectAll("pointGroup")
+        this.g.selectAll("pointGroup").select("circle")
             .data(clusterCentroids)
             .enter().append("circle")
             .attr("r", d => radiusScale(d.numberOfPoints))
             .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
-            .style("opacity", 0.6)
+            .style("opacity", 0.9)
+            .style("fill", d => colorScale(d.clusterColor))
             .on('click', d => {
-              this.showClusterInfo(d)
-            })
+                this.showClusterInfo(d)
+              });
     }
 
   /**
