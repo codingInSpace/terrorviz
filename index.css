@@ -51,6 +51,7 @@ p1 {
 }
 
 #cluster-info-card {
+	display: none; /*hidden by default*/
 	position: fixed;
 	top: 5vh;
 	right: 3vw;
