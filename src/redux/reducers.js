@@ -36,6 +36,26 @@ const incidentsReducer = (state = Map({}), action) => {
   return state
 }
 
+const clusterInfoReducer = (state = {}, action) => {
+  switch(action.type) {
+    case actions.SHOW_CLUSTER_INFO:
+      state = {
+        visible: true,
+        data: action.payload
+      }
+      break;
+
+    case actions.HIDE_CLUSTER_INFO:
+      state = {
+        visible: false,
+        data: null
+      }
+      break;
+  }
+
+  return state
+}
+
 const mapUpdateReducer = (state = false, action) => {
   switch(action.type) {
     case actions.SET_MAP_SHOULD_UPDATE:
@@ -51,7 +71,8 @@ const rootReducer = combineReducers({
   loadedYears: loadedYearsReducer,
   incidents: incidentsReducer,
   rangeToShow: rangeToShowReducer,
-  mapShouldUpdate: mapUpdateReducer
+  mapShouldUpdate: mapUpdateReducer,
+  clusterInfo: clusterInfoReducer
 })
 
 export default rootReducer
