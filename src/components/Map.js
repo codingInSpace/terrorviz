@@ -213,6 +213,9 @@ class Map {
 
         this.pointGroup = this.g.append("pointGroup");
 
+        // Remove original dots
+        this.g.selectAll('circle').remove();
+      
         this.g.selectAll("pointGroup").select("circle")
             .data(clusterCentroids)
             .enter().append("circle")
@@ -224,6 +227,7 @@ class Map {
             .on('click', d => {
                 this.showClusterInfo(d)
               });
+
     }
 
   /**
