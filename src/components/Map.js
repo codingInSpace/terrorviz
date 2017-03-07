@@ -146,6 +146,10 @@ class Map {
 
 
         var numberOfClusters = Math.max(...dbscanArr);
+
+
+        console.log("numberOfCluster = " + numberOfClusters);
+
         var clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
         var currentDataItem;
 
@@ -153,7 +157,7 @@ class Map {
         var clusterMeanLat = [];
 
         // initialize clusterSums
-        for(var k = 0; k < numberOfClusters; k++){
+        for(let k = 0; k < numberOfClusters; k++){
 
             clusterSumsLon.push(0);
             clusterSumsLat.push(0);
@@ -179,22 +183,14 @@ class Map {
             clusterMeanLat[j] = clusterSumsLat[j] / numberOfpointsInCluster[j];
         }
 
-        //*************************************************************************************************
-        //*************************************************************************************************
-        //*************************************************************************************************
 
-
-
-
-
+        console.log("max = " +Math.max(...numberOfpointsInCluster));
 
 
 
         let radiusScale = scale.scaleLinear()
-            .range([0,3])
-            .domain([1,10]);
-
-
+            .domain([0,20])
+            .range([0,2]);
 
         let clusterCentroids = [];
 
@@ -204,43 +200,37 @@ class Map {
 
                 lon: clusterMeanLon[o],
                 lat:clusterMeanLat[o],
-                numberOfPoints:numberOfpointsInCluster[o]
+                numberOfPoints:numberOfpointsInCluster[o],
+                clusterColor:o+1
             };
 
             clusterCentroids.push(obj);
+
+            console.log("obj!!!"+obj.clusterColor);
         }
 
+        for(var indexNew = 0; indexNew < numberOfClusters; indexNew++){
+
+            console.log(clusterCentroids[indexNew].clusterColor);
+        }
+
+        this.pointGroup = this.g.append("pointGroup");
 
 
-        this.pointGroup = this.svg.append("pointGroup");
-
-        this.svg.selectAll("pointGroup")
+        this.g.selectAll("pointGroup").select("circle")
             .data(clusterCentroids)
             .enter().append("circle")
-            .attr("r", d => radiusScale(d.numberOfPoints))
+            .attr("r", d => {
+                console.log(d)
+                return radiusScale(d.numberOfPoints)
+            })
             .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
-            .style("opacity", 0.6);
+            .style("opacity", 0.9)
+            .style("fill", function(d){
 
-
-
-
-
-
-
-
-
-
-
-
-
-        //*************************************************************************************************
-        //*************************************************************************************************
-        //*************************************************************************************************
-
-
-
-
+                console.log(d);
+                return colorScale(d.clusterColor)});
     }
 }
 export default Map
