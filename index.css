@@ -67,6 +67,7 @@ p1 {
 	bottom: 180px;
 	left: 50px;
 	display: none; /*hide initially*/
+	color: white !important;
 }
 
 #cluster-info-card {
@@ -74,6 +75,17 @@ p1 {
 	position: fixed;
 	top: 5vh;
 	right: 3vw;
+	min-height: 150px !important;
+	background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+}
+
+#cluster-info-title {
+	color: white;
+	font-weight: 900;
+}
+#cluster-info-text {
+	color: white;
 }
 
 .legentTitle {
