@@ -285,7 +285,7 @@ class Map {
      //Color Legend container
      var legendsvg = this.svg.append("g")
          .attr("class", "legendWrapper")
-         .attr("transform", "translate(" + 100 + "," + (765) + ")");
+         .attr("transform", "translate(" + 140 + "," + (720) + ")");
 
      //Draw the Rectangle
      legendsvg.append("rect")

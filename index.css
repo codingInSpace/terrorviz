@@ -63,3 +63,9 @@ p1 {
 	top: 5vh;
 	right: 3vw;
 }
+
+#fatalities-button {
+	position: absolute;
+	top: 18%;
+	left: 30px;
+}
