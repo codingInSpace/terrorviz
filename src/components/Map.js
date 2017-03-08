@@ -30,6 +30,8 @@ class Map {
             .attr("height", height);
         //.style("background-color", "black");
 
+        this.colorScale = d3.scale.linear().domain([0,10,20]).range(["green","yellow","red"]);
+
         this.path = geoPath()
             .projection(this.projection);
 
@@ -227,9 +229,90 @@ class Map {
             .on('click', d => {
                 this.showClusterInfo(d)
               });
-
     }
 
+    colorByFatality(){
+    if(checker) {
+        points.style("fill", function (d) {
+            checker = false;
+            return colorScale(d.nkill + d.nwound)
+        })
+    }
+    else{points.style("fill", "aqua");
+        checker = true;}
+}
+ legend() {
+     //LEGEND//
+     var legendWidth = Math.min(100*2, 400);
+
+     var tempScale = d3.scale.linear()
+         .domain([0, 25])
+         .range([0, width]);
+
+     //Calculate the variables for the temp gradient
+     var numStops = 12;
+     tempRange = tempScale.domain();
+     tempRange[2] = tempRange[1] - tempRange[0];
+     tempPoint = [];
+     for(var i = 0; i < numStops; i++) {
+         tempPoint.push(i * tempRange[2]/(numStops-1) + tempRange[0]);
+     }//for i
+
+     //Create the gradient
+     svg.append("defs")
+         .append("linearGradient")
+         .attr("id", "legend-weather")
+         .attr("x1", "0%").attr("y1", "0%")
+         .attr("x2", "100%").attr("y2", "0%")
+         .selectAll("stop")
+         .data(d3.range(numStops))
+         .enter().append("stop")
+         .attr("offset", function(d,i) { return tempScale( tempPoint[i] )/width; })
+         .attr("stop-color", function(d,i) { return colorScale( tempPoint[i] ); });
+
+     //Color Legend container
+     var legendsvg = svg.append("g")
+         .attr("class", "legendWrapper")
+         .attr("transform", "translate(" + 100 + "," + (765) + ")");
+
+     //Draw the Rectangle
+     legendsvg.append("rect")
+         .attr("class", "legendRect")
+         .attr("x", -legendWidth/2 + 10)
+         .attr("y", 0)
+         .attr("rx", 8/2)
+         .attr("width", legendWidth)
+         .attr("height", 8)
+         .style("fill", "url(#legend-weather)");
+
+     //Append title
+     legendsvg.append("text")
+         .attr("class", "legendTitle")
+         .attr("x", 10)
+         .attr("y", -10)
+         .style("text-anchor", "middle")
+         .text("Number Of Fatalities");
+
+     //Set scale for x-axis
+     var xScale = d3.scale.linear()
+         .range([-legendWidth/2, legendWidth/2])
+         .domain([-10,30] );
+
+
+     //Define x-axis
+     var xAxis = d3.svg.axis()
+         .orient("bottom")
+         .ticks(4)
+         .tickFormat(function(d,i) { if(i!=4){return i*5;}else{return "> " + i*5} })
+         .scale(xScale);
+
+
+     //Set up X axis
+     legendsvg.append("g")
+         .attr("class", "axis")
+         .attr("transform", "translate(10," + (10) + ")")
+         .call(xAxis);
+ }
   /**
    * Set clickable clusters state
    * @param {boolean} state - If clusters should be rendered as clickable objects or not
