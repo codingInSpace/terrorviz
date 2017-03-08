@@ -59,6 +59,18 @@ class Map {
         const legendButton = document.querySelector('#fatalities-button').addEventListener('click', () => {
           this.colorByFatality()
         })
+
+      this.clusterInfoToggleContainer = document.querySelector('#cluster-info-toggle-container')
+      const clusterInfoToggle = document.querySelector('#cluster-info-toggle-input')
+      clusterInfoToggle.addEventListener('change', () => {
+        if (clusterInfoToggle.checked)
+          this.renderClusterCircles()
+        else {
+          this.reset()
+          this.draw(this.data)
+          this.dbscanOnClick()
+        }
+      })
     }
 
     zoomed() {
@@ -86,6 +98,9 @@ class Map {
       this.g.selectAll('circle').remove()
       this.g.selectAll('pointGroup').remove()
       this.checker = true
+
+      // Hide toggle
+      this.clusterInfoToggleContainer.style.display = 'none'
     }
 
   /**
@@ -143,6 +158,10 @@ class Map {
 
     dbscanOnClick() {
       let dbscanArr = dbScan(this.data);
+      console.log(dbscanArr.length)
+
+      // Show toggle
+      this.clusterInfoToggleContainer.style.display = 'block'
 
       let colorScale = scale.scaleOrdinal(scale.schemeCategory20c);
 
@@ -161,11 +180,12 @@ class Map {
             return 0;
         })
 
-      if (this.clickableClustersActive)
-        this.renderClusterCircles(dbscanArr, colorScale)
+      this.clusteredData = dbscanArr
     }
 
-    renderClusterCircles(dbscanArr, colorScale) {
+    renderClusterCircles() {
+        let dbscanArr = this.clusteredData
+        let colorScale = scale.scaleOrdinal(scale.schemeCategory20c);
         let numberOfClusters = Math.max(...dbscanArr);
         let clusterSumsLon = [], clusterSumsLat = [], numberOfpointsInCluster = [];
         let currentDataItem;
@@ -286,7 +306,7 @@ class Map {
      //Color Legend container
      var legendsvg = this.svg.append("g")
          .attr("class", "legendWrapper")
-         .attr("transform", `translate(${this.width - 170}, 735)`);
+         .attr("transform", `translate(${this.width - 170}, 725)`);
 
      //Draw the Rectangle
      legendsvg.append("rect")
@@ -304,6 +324,9 @@ class Map {
          .attr("x", 10)
          .attr("y", -10)
          .style("text-anchor", "middle")
+         .style("fill", "white")
+         .style("font-family", `"Roboto","Helvetica","Arial",sans-serif`)
+         .style("font-weight", `400`)
          .text("Number Of Fatalities");
 
      //Set scale for x-axis
@@ -322,7 +345,10 @@ class Map {
      legendsvg.append("g")
          .attr("class", "axis")
          .attr("transform", `translate(10, 10)`)
-         .call(xAxis);
+         .call(xAxis)
+   .selectAll("text")
+       .style("fill", "white")
+       .style("font-family", `"Roboto","Helvetica","Arial",sans-serif`)
  }
   /**
    * Set clickable clusters state

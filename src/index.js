@@ -25,7 +25,7 @@ const setCLusterInfoInactive = () => store.dispatch({
 
 const map = new Map(window.innerWidth, 760, showClusterInfo, hideClusterInfo)
 const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
-const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
+//const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
 const clusterInfoBox = new CLusterInfoBox(hideClusterInfo)
 
 let currentClusterToggleState
@@ -54,10 +54,10 @@ store.subscribe(() => {
   }
 
   // Update for cluster info active toggle state
-  if (previousClusterToggleState !== currentClusterToggleState) {
-    clusterInfoToggle.setState(state.clusterInfoToggle)
-    map.setState(state.clusterInfoToggle)
-  }
+  //if (previousClusterToggleState !== currentClusterToggleState) {
+    //clusterInfoToggle.setState(state.clusterInfoToggle)
+    //map.setState(state.clusterInfoToggle)
+  //}
 
   // Update cluster info box
   if (state.clusterInfo.visible) {

@@ -51,6 +51,7 @@ class YearRange {
         .tickSize(-height)
         .tickPadding(0))
       .selectAll("text")
+        .attr("class", "axis-text")
         .attr("x", 10)
         .attr("y", 4);
 

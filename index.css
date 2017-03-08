@@ -48,6 +48,8 @@ p1 {
 	z-index: 99;
 	bottom: 130px;
 	left: 50px;
+	color: white;
+	font-weight: 600;
 }
 
 #fatalities-button {
@@ -55,6 +57,8 @@ p1 {
 	z-index: 99;
 	bottom: 130px;
 	left: 190px;
+	color: white;
+	font-weight: 600;
 }
 
 #cluster-info-toggle-container {
@@ -62,6 +66,7 @@ p1 {
 	z-index: 99;
 	bottom: 180px;
 	left: 50px;
+	display: none; /*hide initially*/
 }
 
 #cluster-info-card {
@@ -69,4 +74,13 @@ p1 {
 	position: fixed;
 	top: 5vh;
 	right: 3vw;
+}
+
+.legentTitle {
+	color: white !important;
+	fill: white !important;
+}
+
+.axis-text {
+	fill: white !important;
 }

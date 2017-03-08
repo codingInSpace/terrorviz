@@ -11,9 +11,9 @@ class ClusterInfoToggle {
    */
   constructor(setActive, setInactive, state) {
     this.state = state
-    this.domElement = document.querySelector('#cluster-info-toggle-input')
+    this.domElement = document.querySelector('#cluster-info-toggle-button')
 
-    this.domElement.addEventListener('change', () => {
+    this.domElement.addEventListener('click', () => {
       return this.getState() === true ? setInactive() : setActive()
     })
   }
