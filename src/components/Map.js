@@ -26,6 +26,7 @@ class Map {
         this.legendColorScale = scaleLinear().domain([0,10,20]).range(["green","yellow","red"]);
         this.checker = true
         this.width = width
+        this.isClustered = false;
 
         this.projection = geoMercator()
             .scale((width - 3) / (2 * Math.PI))
@@ -56,7 +57,9 @@ class Map {
         const button = document.querySelector('#dbscan-button').addEventListener('click', () => {
           this.dbscanOnClick(this.data)
         })
-        const legendButton = document.querySelector('#fatalities-button').addEventListener('click', () => {
+
+        this.colorByFatalitiesButton = document.querySelector('#fatalities-button')
+        this.colorByFatalitiesButton.addEventListener('click', () => {
           this.colorByFatality()
         })
 
@@ -98,6 +101,8 @@ class Map {
       this.g.selectAll('circle').remove()
       this.g.selectAll('pointGroup').remove()
       this.checker = true
+      this.isClustered = false
+      this.colorByFatalitiesButton.disabled = false
 
       // Hide toggle
       this.clusterInfoToggleContainer.style.display = 'none'
@@ -158,7 +163,8 @@ class Map {
 
     dbscanOnClick() {
       let dbscanArr = dbScan(this.data);
-      console.log(dbscanArr.length)
+      this.isClustered = true
+      this.colorByFatalitiesButton.disabled = true
 
       // Show toggle
       this.clusterInfoToggleContainer.style.display = 'block'
@@ -260,14 +266,14 @@ class Map {
             });
     }
 
-  colorByFatality(){
+  colorByFatality() {
     const points = this.g.selectAll('circle')
 
     if(this.checker) {
       points.style("fill", d => {
         this.checker = false;
         this.legend()
-        return this.legendColorScale(d.nkill + d.nwound)
+        return this.isClustered ? this.legendColorScale(d.fatalities / d.numberOfPoints) : this.legendColorScale(d.nkill + d.nwound)
       })
     } else {
       points.style("fill", "aqua");

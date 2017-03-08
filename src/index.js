@@ -28,6 +28,11 @@ const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
 //const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
 const clusterInfoBox = new CLusterInfoBox(hideClusterInfo)
 
+document.querySelector('#reset-button').addEventListener('click', () => {
+  map.reset()
+  yearRange.reset()
+})
+
 let currentClusterToggleState
 store.subscribe(() => {
   let previousClusterToggleState = currentClusterToggleState

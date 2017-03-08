@@ -48,7 +48,7 @@ p1 {
 	z-index: 99;
 	bottom: 130px;
 	left: 50px;
-	color: white;
+	color: black;
 	font-weight: 600;
 }
 
@@ -57,7 +57,17 @@ p1 {
 	z-index: 99;
 	bottom: 130px;
 	left: 190px;
-	color: white;
+	color: black;
+	font-weight: 600;
+}
+
+#reset-button {
+	position: absolute;
+	z-index: 99;
+	bottom: 130px;
+	left: 372px;
+	background-color: #BDBDBD !important;
+	color: black;
 	font-weight: 600;
 }
 

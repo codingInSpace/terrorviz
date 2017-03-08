@@ -19,6 +19,7 @@ import {
 
 class YearRange {
   constructor(svgWidth = 1600, svgHeight = 80, getRange) {
+    this.selection = null
     this.getRange = getRange
 
     this.svg = select('body').append('svg')
@@ -73,6 +74,7 @@ class YearRange {
   }
 
   brushMoved(height) {
+    this.selection = event.selection
     const s = event.selection;
     if (s === null) {
       this.handle.attr("display", "none"); //Hide handles if no range
@@ -112,6 +114,13 @@ class YearRange {
       data = [year1]
 
     this.getRange(data)
+  }
+
+  /**
+   * Reset selection
+   */
+  reset() {
+    this.gBrush.call(this.brush.move, null);
   }
 }
 
