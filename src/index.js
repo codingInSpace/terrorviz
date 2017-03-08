@@ -2,7 +2,6 @@ import store from './redux/store'
 import * as actions from './redux/actions'
 
 import Map from './components/Map'
-import dbscan from './components/dbscan'
 import YearRange from './components/YearRange'
 import CLusterInfoToggle from './components/ClusterInfoToggle'
 import CLusterInfoBox from './components/ClusterInfoBox'
@@ -24,7 +23,7 @@ const setCLusterInfoInactive = () => store.dispatch({
   type: actions.SET_CLUSTER_INFO_INACTIVE, payload: false
 })
 
-const map = new Map(window.innerWidth, 750, showClusterInfo, hideClusterInfo)
+const map = new Map(window.innerWidth, 760, showClusterInfo, hideClusterInfo)
 const yearRange = new YearRange(window.innerWidth, 80, getIncidentsFromRange)
 const clusterInfoToggle = new CLusterInfoToggle(setCLusterInfoActive, setCLusterInfoInactive, store.getState().clusterInfoToggle)
 const clusterInfoBox = new CLusterInfoBox(hideClusterInfo)

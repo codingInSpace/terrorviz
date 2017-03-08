@@ -46,15 +46,22 @@ p1 {
 #dbscan-button {
     position: absolute;
 	z-index: 99;
-	top: 6%;
-	left: 30px;
+	bottom: 130px;
+	left: 50px;
 }
 
-#cluster-info-toggle {
+#fatalities-button {
 	position: absolute;
 	z-index: 99;
-	top: 12%;
-	left: 30px;
+	bottom: 130px;
+	left: 190px;
+}
+
+#cluster-info-toggle-container {
+	position: absolute;
+	z-index: 99;
+	bottom: 180px;
+	left: 50px;
 }
 
 #cluster-info-card {
@@ -62,10 +69,4 @@ p1 {
 	position: fixed;
 	top: 5vh;
 	right: 3vw;
-}
-
-#fatalities-button {
-	position: absolute;
-	top: 18%;
-	left: 30px;
 }

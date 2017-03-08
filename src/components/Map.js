@@ -25,7 +25,7 @@ class Map {
         this.data;
         this.legendColorScale = scaleLinear().domain([0,10,20]).range(["green","yellow","red"]);
         this.checker = true
-        this.colorBarWidth = width
+        this.width = width
 
         this.projection = geoMercator()
             .scale((width - 3) / (2 * Math.PI))
@@ -259,7 +259,7 @@ class Map {
 
      let tempScale = scaleLinear()
          .domain([0, 25])
-         .range([0, this.colorBarWidth]);
+         .range([0, this.width]);
 
      //Calculate the variables for the temp gradient
      let numStops = 12;
@@ -279,13 +279,13 @@ class Map {
          .selectAll("stop")
          .data(range(numStops))
          .enter().append("stop")
-         .attr("offset", (d,i) => tempScale( tempPoint[i] )/this.colorBarWidth )
+         .attr("offset", (d,i) => tempScale( tempPoint[i] )/this.width )
          .attr("stop-color", (d,i) => this.legendColorScale( tempPoint[i] ));
 
      //Color Legend container
      var legendsvg = this.svg.append("g")
          .attr("class", "legendWrapper")
-         .attr("transform", "translate(" + 140 + "," + (720) + ")");
+         .attr("transform", `translate(${this.width - 170}, 735)`);
 
      //Draw the Rectangle
      legendsvg.append("rect")
