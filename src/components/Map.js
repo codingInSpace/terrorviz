@@ -234,6 +234,7 @@ class Map {
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
             .style("opacity", 0.9)
             .style("fill", d => colorScale(d.clusterColor))
+            .style("cursor", "pointer")
             .on('click', d => {
               this.showClusterInfo(d)
             });
