@@ -6,7 +6,10 @@ import {
   geoPath,
   zoom,
   json,
-  event
+  event,
+  axisBottom,
+  scaleLinear,
+  range
 } from 'd3'
 import * as scale from 'd3-scale'
 
@@ -20,6 +23,9 @@ class Map {
         this.showClusterInfo = showClusterInfo
         this.hideClusterInfo = hideClusterInfo
         this.data;
+        this.legendColorScale = scaleLinear().domain([0,10,20]).range(["green","yellow","red"]);
+        this.checker = true
+        this.colorBarWidth = width
 
         this.projection = geoMercator()
             .scale((width - 3) / (2 * Math.PI))
@@ -29,8 +35,6 @@ class Map {
             .attr("width", width)
             .attr("height", height);
         //.style("background-color", "black");
-
-        this.colorScale = d3.scale.linear().domain([0,10,20]).range(["green","yellow","red"]);
 
         this.path = geoPath()
             .projection(this.projection);
@@ -51,6 +55,9 @@ class Map {
 
         const button = document.querySelector('#dbscan-button').addEventListener('click', () => {
           this.dbscanOnClick(this.data)
+        })
+        const legendButton = document.querySelector('#fatalities-button').addEventListener('click', () => {
+          this.colorByFatality()
         })
     }
 
@@ -78,6 +85,7 @@ class Map {
   reset() {
       this.g.selectAll('circle').remove()
       this.g.selectAll('pointGroup').remove()
+      this.checker = true
     }
 
   /**
@@ -227,51 +235,55 @@ class Map {
             .style("opacity", 0.9)
             .style("fill", d => colorScale(d.clusterColor))
             .on('click', d => {
-                this.showClusterInfo(d)
-              });
+              this.showClusterInfo(d)
+            });
     }
 
-    colorByFatality(){
-    if(checker) {
-        points.style("fill", function (d) {
-            checker = false;
-            return colorScale(d.nkill + d.nwound)
-        })
-    }
-    else{points.style("fill", "aqua");
-        checker = true;}
-}
- legend() {
-     //LEGEND//
-     var legendWidth = Math.min(100*2, 400);
+  colorByFatality(){
+    const points = this.g.selectAll('circle')
 
-     var tempScale = d3.scale.linear()
+    if(this.checker) {
+      points.style("fill", d => {
+        this.checker = false;
+        this.legend()
+        return this.legendColorScale(d.nkill + d.nwound)
+      })
+    } else {
+      points.style("fill", "aqua");
+      this.checker = true;
+    }
+  }
+
+   legend() {
+     let legendWidth = Math.min(100*2, 400);
+
+     let tempScale = scaleLinear()
          .domain([0, 25])
-         .range([0, width]);
+         .range([0, this.colorBarWidth]);
 
      //Calculate the variables for the temp gradient
-     var numStops = 12;
-     tempRange = tempScale.domain();
+     let numStops = 12;
+     let tempRange = tempScale.domain();
      tempRange[2] = tempRange[1] - tempRange[0];
-     tempPoint = [];
-     for(var i = 0; i < numStops; i++) {
+     let tempPoint = [];
+     for(let i = 0; i < numStops; i++) {
          tempPoint.push(i * tempRange[2]/(numStops-1) + tempRange[0]);
      }//for i
 
      //Create the gradient
-     svg.append("defs")
+     this.svg.append("defs")
          .append("linearGradient")
          .attr("id", "legend-weather")
          .attr("x1", "0%").attr("y1", "0%")
          .attr("x2", "100%").attr("y2", "0%")
          .selectAll("stop")
-         .data(d3.range(numStops))
+         .data(range(numStops))
          .enter().append("stop")
-         .attr("offset", function(d,i) { return tempScale( tempPoint[i] )/width; })
-         .attr("stop-color", function(d,i) { return colorScale( tempPoint[i] ); });
+         .attr("offset", (d,i) => tempScale( tempPoint[i] )/this.colorBarWidth )
+         .attr("stop-color", (d,i) => this.legendColorScale( tempPoint[i] ));
 
      //Color Legend container
-     var legendsvg = svg.append("g")
+     var legendsvg = this.svg.append("g")
          .attr("class", "legendWrapper")
          .attr("transform", "translate(" + 100 + "," + (765) + ")");
 
@@ -294,23 +306,21 @@ class Map {
          .text("Number Of Fatalities");
 
      //Set scale for x-axis
-     var xScale = d3.scale.linear()
+     var xScale = scaleLinear()
          .range([-legendWidth/2, legendWidth/2])
          .domain([-10,30] );
 
 
      //Define x-axis
-     var xAxis = d3.svg.axis()
-         .orient("bottom")
+     var xAxis = axisBottom()
          .ticks(4)
          .tickFormat(function(d,i) { if(i!=4){return i*5;}else{return "> " + i*5} })
          .scale(xScale);
 
-
      //Set up X axis
      legendsvg.append("g")
          .attr("class", "axis")
-         .attr("transform", "translate(10," + (10) + ")")
+         .attr("transform", `translate(10, 10)`)
          .call(xAxis);
  }
   /**
