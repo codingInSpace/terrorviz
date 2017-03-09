@@ -101,6 +101,7 @@ class Map {
   reset() {
       this.g.selectAll('circle').remove()
       this.g.selectAll('pointGroup').remove()
+      this.svg.selectAll('.legendWrapper').remove()
       this.checker = true
       this.isClustered = false
       this.colorByFatalitiesButton.disabled = false
