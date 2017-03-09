@@ -261,7 +261,7 @@ class Map {
         this.g.selectAll("pointGroup").select("circle")
             .data(clusterCentroids)
             .enter().append("circle")
-            .attr("r", d => radiusScale(d.numberOfPoints))
+            .attr("r", d => 3*Math.sqrt(radiusScale(d.numberOfPoints)))
             .attr("cx", d => this.projection([d['lon'], d['lat']])[0])
             .attr("cy", d => this.projection([d['lon'], d['lat']])[1])
             .style("opacity", 0.9)
