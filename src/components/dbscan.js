@@ -1,7 +1,5 @@
 
 const dbScan = data => {
-    console.log(data.length);
-
     var minPts = 100; //50 //1000
     var epsilon = 4; //2 //4
 

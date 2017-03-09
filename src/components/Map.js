@@ -124,8 +124,6 @@ class Map {
 
         this.data = data
 
-        console.log('Drawing data on map...')
-
         this.g.selectAll("circle")
             .data(data)
             .enter()
@@ -136,9 +134,9 @@ class Map {
             .attr("r", 2)
             .style("fill", "aqua")
             .style("opacity", 0.25)
-            .style("display", d => {
+            .style("visibility", d => {
               if (!d['longitude'] && !d['latitude'])
-                return 'none' //don't project undefined positions on null island
+                return 'hidden' //don't project undefined positions on null island
             })
             .on("mouseover", d => {
                 this.tooltip.transition()
@@ -163,8 +161,6 @@ class Map {
                     .style("opacity", 0);
             })
             .on("click", d => console.log(d));
-
-        console.log('Data on map updated.')
     }
 
     dbscanOnClick() {
@@ -215,6 +211,7 @@ class Map {
             clusterMeanLon.push(0);
             clusterMeanLat.push(0);
             clusterFatalities.push(0)
+
         }
 
         for(let i = 0; i < this.data.length; i++){
@@ -247,7 +244,7 @@ class Map {
                 lat:clusterMeanLat[o],
                 numberOfPoints:numberOfpointsInCluster[o],
                 fatalities: clusterFatalities[o],
-                clusterColor:o+1
+                clusterColor: o+1
             };
 
             clusterCentroids.push(obj);
