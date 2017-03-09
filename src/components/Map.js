@@ -136,6 +136,10 @@ class Map {
             .attr("r", 2)
             .style("fill", "aqua")
             .style("opacity", 0.25)
+            .style("display", d => {
+              if (!d['longitude'] && !d['latitude'])
+                return 'none' //don't project undefined positions on null island
+            })
             .on("mouseover", d => {
                 this.tooltip.transition()
                     .duration(300)
@@ -158,7 +162,7 @@ class Map {
                     .duration(300)
                     .style("opacity", 0);
             })
-            .on("click", d => console.log(d['country_txt']));
+            .on("click", d => console.log(d));
 
         console.log('Data on map updated.')
     }
