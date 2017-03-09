@@ -35,7 +35,7 @@ class YearRange {
       .attr("transform", `translate(${left}, ${top})`);
 
     this.x = scaleTime()
-      .domain([new Date(1970, 1, 1), new Date(2015, 1, 1)])
+      .domain([new Date(1970, 1, 1), new Date(2016, 1, 1) - 1])
       .rangeRound([0, width])
     this.y = randomNormal(height / 2, height / 8)
 
@@ -53,6 +53,10 @@ class YearRange {
         .tickPadding(0))
       .selectAll("text")
         .attr("class", "axis-text")
+        .style("display", d => {
+          if (parseFloat(moment(d).format('YYYY')) % 2 !== 0)
+            return 'none'
+        })
         .attr("x", 10)
         .attr("y", 4);
 

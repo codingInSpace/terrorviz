@@ -64,9 +64,10 @@ class Map {
         })
 
       this.clusterInfoToggleContainer = document.querySelector('#cluster-info-toggle-container')
-      const clusterInfoToggle = document.querySelector('#cluster-info-toggle-input')
-      clusterInfoToggle.addEventListener('change', () => {
-        if (clusterInfoToggle.checked)
+      this.clusterInfoToggleLabel = document.querySelector('#cluster-info-toggle-label')
+      this.clusterInfoToggle = document.querySelector('#cluster-info-toggle-input')
+      this.clusterInfoToggle.addEventListener('change', () => {
+        if (this.clusterInfoToggle.checked)
           this.renderClusterCircles()
         else {
           this.reset()
