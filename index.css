@@ -46,7 +46,7 @@ p1 {
 #dbscan-button {
     position: absolute;
 	z-index: 99;
-	bottom: 130px;
+	bottom: 150px;
 	left: 50px;
 	color: black;
 	font-weight: 600;
@@ -55,7 +55,7 @@ p1 {
 #fatalities-button {
 	position: absolute;
 	z-index: 99;
-	bottom: 130px;
+	bottom: 150px;
 	left: 190px;
 	color: black;
 	font-weight: 600;
@@ -64,7 +64,7 @@ p1 {
 #reset-button {
 	position: absolute;
 	z-index: 99;
-	bottom: 130px;
+	bottom: 150px;
 	left: 372px;
 	background-color: #BDBDBD !important;
 	color: black;
@@ -74,7 +74,7 @@ p1 {
 #cluster-info-toggle-container {
 	position: absolute;
 	z-index: 99;
-	bottom: 180px;
+	bottom: 200px;
 	left: 50px;
 	display: none; /*hide initially*/
 	color: white !important;
