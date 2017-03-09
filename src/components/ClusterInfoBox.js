@@ -2,6 +2,11 @@
  * Show a card with detailed information of a cluster
  */
 class ClusterInfoBox {
+
+  /**
+   * Constructor
+   * @param {Function} clearBoxData - Function to clear box data in redux store
+   */
   constructor(clearBoxData) {
     this.clearBoxData = clearBoxData
     this.domElement = document.querySelector('#cluster-info-card')
@@ -14,6 +19,13 @@ class ClusterInfoBox {
     })
   }
 
+  /**
+   *
+   * @param {Object} data - data to display in box
+   * @param data.numberOfPoints - Number of terrorist incidents that occurred in cluster
+   * @param data.fatalities - Number of fatalities that occurred in cluster
+   * ...
+   */
   show(data) {
     this.data = data
 
@@ -26,6 +38,9 @@ class ClusterInfoBox {
     this.domElement.style.display = 'block'
   }
 
+  /**
+   * Hide box
+   */
   hide() {
     this.domElement.style.display = 'none'
   }

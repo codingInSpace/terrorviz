@@ -1,22 +1,23 @@
 import moment from 'moment'
-//import store from '../redux/store'
-//import * as actions from '../redux/actions'
 import {
   brush,
   select,
-  scaleLinear,
+  //scaleLinear,
   scaleTime,
   timeYear,
-  extent,
+  //extent,
   randomNormal,
   brushX,
   axisBottom,
-  arc,
-  transition,
+  //arc,
+  //transition,
   event,
   selectAll
 } from 'd3'
 
+/**
+ * Time axis
+ */
 class YearRange {
   constructor(svgWidth = 1600, svgHeight = 80, getRange) {
     this.selection = null
@@ -42,7 +43,7 @@ class YearRange {
     this.brush = brushX()
       .extent([[0, 0], [width, height]])
       .on("start brush", () => this.brushMoved(height))
-      .on("end", () => this.brushEnded(this));
+      .on("end", () => this.brushEnded());
 
     this.g.append("g")
       .attr("class", "axis axis--grid")
@@ -92,7 +93,8 @@ class YearRange {
     }
   }
 
-  brushEnded(context) {
+  //Handle time selection on brush callback
+  brushEnded() {
     if (!event.sourceEvent) return;
     if (!event.selection) return;
 

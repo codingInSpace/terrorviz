@@ -5,7 +5,6 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import { Server } from 'http'
 import chalk from 'chalk'
-//import Promise from 'bluebird'
 import path from 'path'
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
@@ -23,7 +22,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // Static files to serve
-//app.use(express.static('public'))
+app.use(express.static('public'))
 
 // Mount api routes
 app.use('/api', apiRoutes)
